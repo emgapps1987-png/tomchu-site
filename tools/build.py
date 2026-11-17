@@ -140,7 +140,7 @@ def footer(cur, R):
   <div class="wrap">
     <div class="cols">
       <div><a class="brand" href="{R}index.html"><img src="{R}assets/img/logo-96.png" width="44" height="44" alt=""><span>Tomchu Tattoo</span></a>
-        <p>סטודיו פרטי לקעקועים של תום גבע.<br>Fine Line, ריאליזם, קאברים וצלקות.<br>{CFG["address"]} · בתיאום מראש</p></div>
+        <p>סטודיו פרטי לקעקועים של תום גבע.<br>Fine Line, ריאליזם וקאברים.<br>{CFG["address"]} · בתיאום מראש</p></div>
       <div><h2>דברו עם תום</h2><ul>
         <li><a class="soc-pill" href="{WA}" target="_blank" rel="noopener">{ic("wa")}וואטסאפ<span class="sr"> (נפתח בחלון חדש)</span></a></li>
         <li><a href="tel:+972542885771">054-288-5771</a></li>
@@ -192,7 +192,7 @@ BUSINESS = {
     "@context": "https://schema.org", "@type": "TattooParlor", "@id": SITE + "/#studio", "name": "Tomchu Tattoo – תום גבע",
     "alternateName": "טומצ'ו טאטו", "url": SITE + "/", "image": SITE + "/assets/img/og.jpg", "logo": SITE + "/assets/img/icon-512.png",
     "telephone": "+972-54-288-5771", "email": CFG['email'], "priceRange": "₪₪",
-    "description": "סטודיו פרטי לקעקועים באלפי מנשה: Fine Line, ריאליזם, קאברים וקעקועים על צלקות. עיצוב אישי, ציוד חד־פעמי ואווירה רגועה.",
+    "description": "סטודיו פרטי לקעקועים באלפי מנשה: Fine Line, ריאליזם וקאברים. עיצוב אישי, ציוד חד־פעמי ואווירה רגועה.",
     "address": {"@type": "PostalAddress", "streetAddress": "קדרון 48", "addressLocality": "אלפי מנשה", "addressCountry": "IL"},
     "geo": {"@type": "GeoCoordinates", "latitude": 32.1801435, "longitude": 35.0132961},
     "areaServed": ["אלפי מנשה", "כפר סבא", "רעננה", "הוד השרון", "קרני שומרון", "צור יגאל"],
@@ -349,7 +349,7 @@ home = f'''
     <div class="hi-text">
       <span class="hi-eye">סטודיו פרטי לקעקועים · אלפי מנשה</span>
       <h1 id="hero-h"><span class="hi-w" style="--d:1.75s">הכל</span> <span class="hi-w" style="--d:1.95s">מתחיל</span> <span class="hi-w iri-flow" style="--d:2.15s">בקעקוע</span></h1>
-      <p class="lead hi-rv" style="--d:2.5s">Fine Line, ריאליזם, קאברים וצלקות.</p>
+      <p class="lead hi-rv" style="--d:2.5s">Fine Line, ריאליזם וקאברים.</p>
       <div class="ctas hi-rv" style="--d:2.7s"><a class="btn btn-iri" href="{{R}}contact.html">{ic("chat")}לקביעת שיחת ייעוץ</a><a class="btn btn-ghost" href="{{R}}guide.html">{ic("spark")}איזה קעקוע מתאים לי?</a></div>
     </div>
   </div>
@@ -375,7 +375,7 @@ home = f'''
 '''
 WEBSITE_LD = {"@context": "https://schema.org", "@type": "WebSite", "name": "Tomchu Tattoo", "url": SITE + "/", "inLanguage": "he"}
 page('index.html', 'Tomchu Tattoo | סטודיו לקעקועים באלפי מנשה – תום גבע',
-     'סטודיו פרטי לקעקועים באלפי מנשה, ליד כפר סבא, רעננה והוד השרון. Fine Line, ריאליזם, קאברים וצלקות – עיצוב אישי, ציוד חד־פעמי ואווירה רגועה.',
+     'סטודיו פרטי לקעקועים באלפי מנשה, ליד כפר סבא, רעננה והוד השרון. Fine Line, ריאליזם וקאברים – עיצוב אישי, ציוד חד־פעמי ואווירה רגועה.',
      home, ld=[BUSINESS, WEBSITE_LD])
 
 # ================================================================ WORKS
@@ -481,7 +481,7 @@ tom = phead('היי, <span class="iri-text">אני תום</span>', 'תום גב�
       <article class="card rise" style="--k:1"><h3>איך אני עובדת</h3><p>לא צריך להגיע עם ציור מוכן. נשב יחד על כוס קפה, אקשיב לסיפור שלך, נבין איזה סגנון מרגש אותך – ואעצב סקיצה אישית שתהיה רק שלך.</p></article>
       <article class="card rise" style="--k:2"><h3>מה מרגש אותי במיוחד</h3><p>קאברים (Cover Up) וקעקועים על צלקות. יש משהו מרפא בלקחת זיכרון ישן או צלקת ולהפוך אותם למשהו חדש ויפה שמחזיר את הביטחון העצמי.</p></article>
     </div>
-    <div class="stack" style="margin-top:22px"><h3>הסגנונות שלי</h3><ul class="chips"><li>Fine Line</li><li>ריאליזם</li><li>קאבר וצלקות</li><li>סקיצה</li><li>עיצוב אישי</li></ul></div>
+    <div class="stack" style="margin-top:22px"><h3>הסגנונות שלי</h3><ul class="chips"><li>Fine Line</li><li>ריאליזם</li><li>קאברים</li><li>סקיצה</li><li>עיצוב אישי</li></ul></div>
   </div>
 </section>
 {STUDIO_SECTIONS}
@@ -529,7 +529,7 @@ process = phead('לפני <span class="iri-text">שמגיעים</span>', 'מהר
   <div class="faq">{fq}</div>
   <div class="card rise" style="position:sticky;top:90px"><h2 style="font-size:1.4rem">עוד שאלה?</h2><p>הכי מהיר בוואטסאפ – אפשר לצרף תמונה של הרעיון או של האזור.</p><div class="ctas"><a class="btn btn-iri" href="{WA}" data-wa="היי תום! יש לי שאלה לפני קעקוע: " target="_blank" rel="noopener">{ic("wa")}לשאול את תום<span class="sr"> (נפתח בחלון חדש)</span></a><a class="btn btn-soft" href="{{R}}guide.html">למדריך ההתאמה</a></div></div>
 </div></section>'''
-page('process.html', 'לפני שמגיעים – איך זה עובד ושאלות ותשובות | Tomchu Tattoo', 'ארבעה שלבים לקעקוע אצל תום, מדריך החלמה, ותשובות לשאלות הנפוצות: כאב, מחיר, סטריליות, חניה, קאברים וצלקות.', process, ld=[crumbs_ld(cr), {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": f['q'], "acceptedAnswer": {"@type": "Answer", "text": f['a']}} for f in C['FAQ']]}])
+page('process.html', 'לפני שמגיעים – איך זה עובד ושאלות ותשובות | Tomchu Tattoo', 'ארבעה שלבים לקעקוע אצל תום, מדריך החלמה, ותשובות לשאלות הנפוצות: כאב, מחיר, סטריליות, חניה וקאברים.', process, ld=[crumbs_ld(cr), {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": f['q'], "acceptedAnswer": {"@type": "Answer", "text": f['a']}} for f in C['FAQ']]}])
 
 # ================================================================ GUIDE
 def opts(name, items):
