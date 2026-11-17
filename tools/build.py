@@ -154,7 +154,7 @@ def footer(cur, R):
         <li><a href="{CFG["waze"]}" target="_blank" rel="noopener">{ic("nav")}ניווט ב־Waze<span class="sr"> (נפתח בחלון חדש)</span></a></li>
         <li><a href="{MOOVIT}" target="_blank" rel="noopener">{ic("pin")}תחבורה ציבורית ב־Moovit<span class="sr"> (נפתח בחלון חדש)</span></a></li></ul></div>
     </div>
-    <div class="legal"><span>© <span data-year>{TODAY.year}</span> Tomchu Tattoo · תום גבע · עוסק מס׳ {BIZ_ID}</span><span><a href="{R}accessibility.html">הצהרת נגישות</a> · <a href="{R}privacy.html">מדיניות פרטיות</a></span></div>
+    <div class="legal"><span>© <span data-year>{TODAY.year}</span> Tomchu Tattoo · תום גבע</span><span><a href="{R}accessibility.html">הצהרת נגישות</a> · <a href="{R}privacy.html">מדיניות פרטיות</a></span></div>
   </div>
 </footer>
 <nav class="tabs" aria-label="פעולות מהירות"><a class="tb-book" href="{R}contact.html">{ic("chat")}קביעת תור</a><a class="tb-wa brand-wa" href="{WA}" target="_blank" rel="noopener">{ic("wa")}וואטסאפ<span class="sr"> (נפתח בחלון חדש)</span></a></nav>
