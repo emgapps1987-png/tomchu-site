@@ -750,3 +750,14 @@ html.a-contrast .drawer-panel { background: #000 !important; backdrop-filter: no
 .drawer-panel::before { opacity: .6; }
 .drawer nav a, .drawer-top b { text-shadow: 0 1px 8px rgba(0,0,0,.55); }
 html.light .drawer-panel { background: rgba(14,12,18,.62) !important; }
+
+/* ---------- in-app browsers (Instagram/Facebook/TikTok) & large system font ---------- */
+html, body { overflow-x: clip; }
+.hdr .wrap > * { min-width: 0; }
+@media (max-width: 440px) { .brand span:not(.sr) { display: none; } }
+@media (max-width: 860px) {
+  /* accessibility button sits in the bottom bar, so it never covers page buttons */
+  .tabs { padding-left: calc(12px + 50px + 8px); }
+  .a11y-btn { inset-inline-start: auto; inset-inline-end: auto; left: 12px; bottom: calc(8px + env(safe-area-inset-bottom)); width: 50px; height: 50px; z-index: 75; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+  .a11y-panel { bottom: calc(72px + env(safe-area-inset-bottom)) !important; }
+}
