@@ -108,9 +108,11 @@ def head(title, desc, path, R, og_img='assets/img/og.jpg', ld=None, robots='inde
 
 def header(cur, R):
     items = ''.join(f'<li><a href="{R}{h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}>{t}</a></li>' for h, t, _ in NAV)
-    ditems = ''.join(f'<li><a href="{h if h.startswith("http") else R + h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}><span>{t}</span></a></li>' for h, t in [('index.html', 'בית'), ('works.html', 'עבודות'), ('guide.html', 'איזה קעקוע מתאים לי?'), ('tom.html', 'תום והסטודיו'), ('process.html', 'לפני שמגיעים'), (APP + '#/health', 'הצהרת בריאות'), ('gift.html', 'שובר מתנה'), ('app.html', 'האפליקציה')])
+    ditems = ''.join(f'<li><a href="{h if h.startswith("http") else R + h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}><span>{t}</span></a></li>' for h, t in [('index.html', 'בית'), ('works.html', 'עבודות'), ('guide.html', 'איזה קעקוע מתאים לי?'), ('tom.html', 'תום והסטודיו'), ('process.html', 'לפני שמגיעים'), ('health.html', 'הצהרת בריאות'), ('gift.html', 'שובר מתנה'), ('app.html', 'האפליקציה')])
+    API, WA = CFG.get('healthEndpoint', ''), CFG['whatsapp']
     return f'''<body>
 <a class="skip" href="#main">דילוג לתוכן הראשי</a>
+<div id="promo-bar" class="promo-bar" hidden data-api="{API}" data-wa="{WA}" data-home="{R}index.html#promo-card"></div>
 <header class="hdr">
   <div class="wrap">
     <button type="button" class="menu-btn" data-menu aria-expanded="false" aria-controls="drawer">{ic("menu")}<span>תפריט</span></button>
@@ -354,6 +356,7 @@ home = f'''
       <div class="ctas hi-rv" style="--d:2.7s"><a class="btn btn-iri" href="{{R}}contact.html">{ic("chat")}לקביעת שיחת ייעוץ</a><a class="btn btn-ghost" href="{{R}}guide.html">{ic("spark")}איזה קעקוע מתאים לי?</a></div>
     </div>
   </div>
+  <div class="wrap"><div id="promo-card" class="promo-card" hidden></div></div>
   <div class="wrap"><div class="tom-strip hi-rv" style="--d:3s"><div class="ph"><img src="{{R}}assets/img/tom-studio-700.webp" width="700" height="394" alt="תום מקעקעת לקוחה בסטודיו שלה באלפי מנשה"></div><div><h2>אמנית, אמא, <span class="iri-text">ומקעקעת עם נשמה</span></h2><p class="q">״אצלי אין חוקים – רק חלומות שמתגשמים.״</p><a class="btn btn-ghost" href="{{R}}tom.html">הסיפור של תום</a></div></div></div>
 </section>
 <section aria-labelledby="tiles-h">
@@ -502,7 +505,7 @@ page('tom.html', 'תום והסטודיו – הסיפור וסיור בסטוד
 # ================================================================ PROCESS
 STEPS = [('רעיון', 'שולחים לתום בוואטסאפ מה בראש – תמונה, מילה, תחושה. לא בטוחים? המדריך באתר והרעיונות באפליקציה יעזרו.', 'guide.html', 'למדריך', False),
          ('סקיצה', 'תום מעצבת סקיצה מקורית רק בשבילך – ואפשר לראות איך היא תיראה על הגוף עוד לפני שמחליטים.', APP + '#/tryon', 'להדמיה על הגוף', True),
-         ('יום הקעקוע', 'ממלאים הצהרת בריאות דיגיטלית מראש, מגיעים לסטודיו, ושותים קפה לפני שמתחילים.', APP + '#/health', 'להצהרת הבריאות', True),
+         ('יום הקעקוע', 'ממלאים הצהרת בריאות דיגיטלית מראש, מגיעים לסטודיו, ושותים קפה לפני שמתחילים.', 'health.html', 'למילוי הצהרת הבריאות', False),
          ('החלמה', 'יומן החלמה יום אחרי יום עם תזכורות – כדי שהקעקוע יישאר חד ויפה לשנים.', APP + '#/care', 'ליומן ההחלמה', True)]
 sl = ''
 for k, (t, p, h, b, x) in enumerate(STEPS):
@@ -583,6 +586,73 @@ giftb = phead('מתנה <span class="iri-text">שנשארת לתמיד</span>', 
 <section aria-label="קניית שובר מתנה" style="padding-top:8px"><div class="wrap"><div class="gift-page" id="gift" aria-live="polite"><noscript><p>כדי לקנות שובר צריך JavaScript. אפשר גם לכתוב לתום בוואטסאפ.</p></noscript></div></div>
 <script type="application/json" id="gift-cfg">{GIFT_CFG}</script></section>"""
 page('gift.html', 'שובר מתנה לקעקוע | Tomchu Tattoo', 'שובר מתנה לקעקוע אצל תום: בוחרים סכום ועיצוב, משלמים בביט או בפייבוקס, והשובר נשלח בוואטסאפ.', giftb, ld=[crumbs_ld(cr)])
+
+# ================================================================ HEALTH DECLARATION (same questions + backend as the app)
+QS, CONS = C['QUESTIONS'], C['CONSENTS']
+def _hq(q):
+    return f"""<fieldset class="hq" id="fs-{q['id']}"><legend>{e(q['text'])}</legend>
+  <div class="yn"><label><input type="radio" name="{q['id']}" value="לא"><span>לא</span></label><label><input type="radio" name="{q['id']}" value="כן"><span>כן</span></label></div>
+  <p class="qn qn-{q['level']}" id="qn-{q['id']}" hidden>{e(q['note'])}</p>
+  <div class="field" id="qdw-{q['id']}" hidden><label for="qd-{q['id']}">פירוט{' (לא חובה)' if q['level'] == 'stop' else ''}</label><textarea id="qd-{q['id']}" name="d_{q['id']}" rows="2"></textarea></div>
+</fieldset>"""
+def _hc(c):
+    star = ' <span class="req" aria-hidden="true">*</span>' if c.get('required') else ''
+    return f'<label class="hchk"><input type="checkbox" name="{c["id"]}"{" required" if c.get("required") and not c.get("minorOnly") else ""}><span>{e(c["text"])}{star}</span></label>'
+def _f(id_, name, label, req=False, typ='text', extra='', hint=''):
+    star = ' <span class="req" aria-hidden="true">*</span>' if req else ''
+    return f'<div class="field"><label for="{id_}">{label}{star}</label><input id="{id_}" name="{name}" type="{typ}"{" required" if req else ""} aria-describedby="{id_}-err"{extra}><span class="err" id="{id_}-err"></span></div>'
+HCFG = json.dumps({'endpoint': CFG.get('healthEndpoint', ''), 'wa': CFG['whatsapp'], 'questions': QS, 'consents': CONS}, ensure_ascii=False)
+cr = [('index.html', 'בית'), (None, 'הצהרת בריאות')]
+healthb = phead('הצהרת <span class="iri-text">בריאות</span>', None, cr, '') + f"""
+<section aria-label="טופס הצהרת בריאות" style="padding-top:8px"><div class="wrap hgrid">
+<div class="hmain">
+<form id="health-form" novalidate>
+  <ol class="hsteps" aria-label="שלבי הטופס"><li data-s="1"><span>1</span> פרטים אישיים</li><li data-s="2"><span>2</span> שאלות בריאות</li><li data-s="3"><span>3</span> אישור וחתימה</li></ol>
+  <p class="sr" id="h-stepnow" aria-live="polite"></p>
+  <div class="hstep" data-step="1">
+    {_f('h-name', 'name', 'שם מלא', True, extra=' autocomplete="name"')}
+    <div class="g2">{_f('h-dob', 'dob', 'תאריך לידה', True, 'date')}{_f('h-phone', 'phone', 'טלפון', True, 'tel', ' autocomplete="tel" inputmode="tel"')}</div>
+    {_f('h-address', 'address', 'כתובת מגורים', True, extra=' autocomplete="street-address" placeholder="רחוב, מספר ועיר"')}
+    {_f('h-design', 'design', 'מה מקעקעים?', True, extra=' placeholder="למשל: פרח בקו עדין, 6 ס״מ, שחור"')}
+    <div class="g2">{_f('h-date', 'tdate', 'תאריך הקעקוע', False, 'date')}{_f('h-area', 'area', 'אזור הקעקוע', False, extra=' placeholder="למשל: אמה"')}</div>
+    <div class="g2">{_f('h-id', 'idnum', 'תעודת זהות (לא חובה)', False, 'text', ' inputmode="numeric" maxlength="9"')}{_f('h-email', 'email', 'אימייל (לא חובה)', False, 'email', ' autocomplete="email"')}</div>
+    <fieldset class="hgroup"><legend>איש קשר לחירום (לא חובה)</legend><div class="g2">{_f('h-ename', 'ename', 'שם')}{_f('h-ephone', 'ephone', 'טלפון', False, 'tel', ' inputmode="tel"')}</div></fieldset>
+    <p class="hnote">בסטודיו נבקש לראות תעודה מזהה לאימות גיל.</p>
+    <p class="hnote" id="minor-note" hidden>מתחת לגיל 18 נדרשים פרטי הורה או אפוטרופוס וחתימתו, בשלב האחרון.</p>
+  </div>
+  <div class="hstep" data-step="2" hidden>
+    <div class="hqs">{''.join(_hq(q) for q in QS)}</div>
+    <p class="err" id="h-q-err" role="alert"></p>
+  </div>
+  <div class="hstep" data-step="3" hidden>
+    <div id="parent-block" hidden>
+      <p class="hnote">ממלא/ת ההצהרה מתחת לגיל 18: נדרשים פרטי הורה או אפוטרופוס, והחתימה למטה היא של ההורה.</p>
+      {_f('h-pname', 'pname', 'שם ההורה', True)}
+      <div class="g2">{_f('h-pid', 'pid', 'ת״ז ההורה', True, 'text', ' inputmode="numeric" maxlength="9"')}{_f('h-pphone', 'pphone', 'טלפון ההורה', True, 'tel', ' inputmode="tel"')}</div>
+      {''.join(_hc(c) for c in CONS if c.get('minorOnly'))}
+    </div>
+    <div class="hchks">{''.join(_hc(c) for c in CONS if not c.get('minorOnly'))}</div>
+    <p class="err" id="h-c-err" role="alert"></p>
+    <div class="field"><span class="flabel" id="sig-label"><span id="sig-who">חתימה</span> <span class="req" aria-hidden="true">*</span></span>
+      <div class="sig-wrap"><canvas id="sig" role="img" aria-labelledby="sig-label"></canvas><span class="sig-ph" id="sig-ph">חתמו כאן עם האצבע או העכבר</span></div>
+      <div class="sig-row"><span class="err" id="h-sig-err" role="alert"></span><button type="button" class="link-btn" id="sig-clear">ניקוי חתימה</button></div>
+    </div>
+    <p class="hlock">ההצהרה נשלחת ישירות לתום ואינה נשמרת באתר. <a href="{{R}}privacy.html">מדיניות פרטיות</a></p>
+  </div>
+  <div class="hacts"><button type="button" class="btn btn-soft" id="h-prev" hidden>חזרה</button><button type="submit" class="btn btn-iri" id="h-next">המשך</button></div>
+</form>
+<div id="health-done" class="hdone" hidden tabindex="-1"></div>
+</div>
+<aside class="hside" aria-label="מידע על ההצהרה">
+  <h2>3 דקות, פעם אחת</h2>
+  <ol><li>פרטים אישיים</li><li>14 שאלות קצרות, כן או לא</li><li>אישור וחתימה, עם האצבע או העכבר</li></ol>
+  <p class="hnote">עונים בכנות. תשובת "כן" לא אומרת שלא נקעקע, רק שתום תבדוק לפני התור.</p>
+  {ext('https://wa.me/' + CFG['whatsapp'], 'שאלה? לכתוב לתום בוואטסאפ', 'btn btn-ghost', 'wa')}
+</aside>
+</div>
+<noscript><div class="wrap"><p>כדי למלא את ההצהרה צריך JavaScript. אפשר גם למלא אותה בסטודיו.</p></div></noscript>
+<script type="application/json" id="health-cfg">{HCFG}</script></section>"""
+page('health.html', 'הצהרת בריאות לפני קעקוע | Tomchu Tattoo', 'הצהרת בריאות דיגיטלית לפני הקעקוע אצל תום: פרטים, שאלות קצרות וחתימה. נשלחת ישירות לתום.', healthb, ld=[crumbs_ld(cr)])
 
 # ================================================================ JOURNAL
 posts = ''
@@ -695,6 +765,10 @@ cr = [('index.html', 'בית'), (None, 'מדיניות פרטיות')]
 priv = phead('מדיניות פרטיות', None, cr, '') + f'''
 <section aria-label="מדיניות פרטיות"><div class="wrap prose">
 <p>מדיניות זו מסבירה איזה מידע אישי נאסף באתר של Tomchu Tattoo (תום גבע, {CFG["address"]}), למה, ומה הזכויות שלך. באתר אין עוגיות פרסום ואין מעקב אחרי מבקרים מסוימים.</p>
+<h2>הצהרת בריאות</h2>
+<p>בהצהרת הבריאות נאספים: שם, תאריך לידה, טלפון, כתובת מגורים, תיאור הקעקוע, תשובות לשאלות בריאות, אישורים וחתימה. תעודת זהות, אימייל ואיש קשר לחירום אינם חובה. לקטינים נאספים גם פרטי הורה או אפוטרופוס. את הפרטים נדרש לתעד לפי המפרט של משרד הבריאות לעסקי קעקוע. מסירתם היא מרצונך, אבל בלי הצהרה חתומה אי אפשר לבצע את הקעקוע.</p>
+<p>זהו מידע רפואי רגיש. ההצהרה נשלחת בחיבור מוצפן (HTTPS) ישירות לחשבון Google של העסק, שם נוצר ממנה קובץ PDF חתום שנשלח למייל של תום ונשמר בתיקייה ובגיליון פרטיים. האתר עצמו לא שומר את ההצהרה. עד השליחה, הפרטים שמילאת נשמרים זמנית רק בדפדפן שלך ונמחקים כשסוגרים את הלשונית. רק תום ניגשת למידע, והוא לא מועבר לאף אחד.</p>
+<p>הצהרות נשמרות עד שנה מיום הקעקוע, כנדרש בהנחיות משרד הבריאות, ונמחקות בתום התקופה. הצהרה שלא בוצע בעקבותיה קעקוע נמחקת לפי בקשה מיד.</p>
 <h2>קניית שובר מתנה</h2>
 <p>כשקונים שובר מתנה באתר נאספים: השם שלך, הטלפון שלך, שם המקבל/ת, הטלפון של המקבל/ת (רק אם בחרת לשלוח ישירות), ההקדשה, הסכום ואמצעי התשלום שבחרת. אין חובה חוקית למסור את המידע, אבל בלעדיו אי אפשר להנפיק שובר.</p>
 <p>המידע משמש רק כדי להנפיק את השובר, לזהות את ההעברה, לשלוח את השובר, לאפשר את מימושו ולחזור אליך בנושא. הוא נשמר בחשבון Google של העסק (Google Sheets), נגיש לתום בלבד, לא נמכר ולא מועבר לאחרים לשום מטרה אחרת, ונשמר כל עוד השובר בתוקף ועוד שנה אחרי – אלא אם הדין מחייב לשמור יותר.</p>
@@ -708,10 +782,10 @@ priv = phead('מדיניות פרטיות', None, cr, '') + f'''
 <h2>סטטיסטיקת כניסות</h2>
 <p>כדי לדעת כמה אנשים נכנסים לאתר ולאילו עמודים, האתר משתמש ב־Cloudflare Web Analytics. הכלי לא משתמש בעוגיות, לא שומר כתובת IP ולא מזהה מבקרים מסוימים. הוא מודד רק נתונים כלליים: מספר הכניסות, העמודים שנצפו, סוג המכשיר, המדינה ומאיזה אתר הגעת.</p>
 <h2>הזכויות שלך</h2>
-<p>אפשר לבקש לעיין במידע שנשמר עליך, לתקן אותו או למחוק אותו (כל עוד אין שובר פעיל שתלוי בו), בפנייה ל־<a href="mailto:{CFG["email"]}">{CFG["email"]}</a> או בטלפון {CFG["phoneDisplay"]}. נחזור אליך תוך 30 יום.</p>
+<p>אפשר לבקש לעיין במידע שנשמר עליך, לתקן אותו או למחוק אותו (כל עוד אין שובר פעיל שתלוי בו, או הצהרה שחובה לשמור לפי הנחיות משרד הבריאות), בפנייה ל־<a href="mailto:{CFG["email"]}">{CFG["email"]}</a> או בטלפון {CFG["phoneDisplay"]}. נחזור אליך תוך 30 יום.</p>
 <p class="muted">עודכן בתאריך {TODAY.strftime("%d.%m.%Y")}.</p>
 </div></section>'''
-page('privacy.html', 'מדיניות פרטיות | Tomchu Tattoo', 'מדיניות הפרטיות של אתר Tomchu Tattoo: איזה מידע נאסף בקניית שובר מתנה, איך הוא נשמר, ומה הזכויות שלך.', priv, ld=[crumbs_ld(cr)])
+page('privacy.html', 'מדיניות פרטיות | Tomchu Tattoo', 'מדיניות הפרטיות של אתר Tomchu Tattoo: איזה מידע נאסף בהצהרת בריאות ובקניית שובר מתנה, איך הוא נשמר, ומה הזכויות שלך.', priv, ld=[crumbs_ld(cr)])
 
 # ================================================================ 404
 nf = f'''<section><div class="wrap stack" style="align-items:flex-start;min-height:50vh;justify-content:center">
@@ -732,10 +806,9 @@ OLD = {'קצת-עליי': 'tom.html', 'קצת-עליי/זאת-אני': 'tom.html
        'מאמרים/המדריך-השלם-למכונות-קעקועים-סוגים-יתרונות-ומה-כדאי-לדעת': 'journal/machines.html'}
 for f_, t_ in [('studio.html', 'tom.html#studio'), ('faq.html', 'process.html#faq')]:
     open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/{t_}"><meta http-equiv="refresh" content="0; url={t_}"><script>location.replace({json.dumps(t_)})</script></head><body><p>העמוד עבר: <a href="{t_}">להמשך</a></p></body></html>')
-HEALTH_URL = APP + '#/health'
-for f_ in ('health.html', os.path.join('health', 'index.html'), os.path.join('הצהרה', 'index.html')):
-    os.makedirs(os.path.dirname(os.path.join(ROOT, f_)) or ROOT, exist_ok=True)
-    open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>הצהרת בריאות | Tomchu Tattoo</title><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url={HEALTH_URL}"><script>location.replace({json.dumps(HEALTH_URL)})</script></head><body style="font-family:sans-serif;text-align:center;padding:40px"><p>פותחים את טופס הצהרת הבריאות… <a href="{HEALTH_URL}">לחצו כאן אם לא נפתח</a></p></body></html>')
+for f_, up_ in ((os.path.join('health', 'index.html'), '../'), (os.path.join('הצהרה', 'index.html'), '../')):
+    os.makedirs(os.path.dirname(os.path.join(ROOT, f_)), exist_ok=True)
+    open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>הצהרת בריאות | Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/health.html"><meta http-equiv="refresh" content="0; url={up_}health.html"></head><body><a href="{up_}health.html">להצהרת הבריאות</a></body></html>')
 for old, new in OLD.items():
     d = os.path.join(ROOT, old); os.makedirs(d, exist_ok=True)
     up = '../' * (old.count('/') + 1); tgt = up + new; full = SITE + '/' + new

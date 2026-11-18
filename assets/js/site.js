@@ -343,4 +343,173 @@
     const h = (location.hash || '').match(/^#(tt-[a-z0-9]{4,8})$/i);
     if (h && !DEMO) status(h[1]); else form();
   }
+
+  /* ---------- health declaration (same questions + backend as the app) ---------- */
+  if ($('#health-form')) {
+    const H = JSON.parse($('#health-cfg').textContent), QS = H.questions, CONS = H.consents;
+    const DEMO = !H.endpoint || !/(^|\.)tomchu-tattoo\.co\.il$/.test(location.hostname);
+    const f = $('#health-form'), done = $('#health-done'), F = (n) => f.elements[n];
+    const val = (n) => (F(n) && F(n).value || '').trim();
+    const esc = (t) => String(t == null ? '' : t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const ageFrom = (iso) => { if (!iso) return null; const b = new Date(iso); if (isNaN(b)) return null; const t = new Date(); let a = t.getFullYear() - b.getFullYear(); if (t.getMonth() < b.getMonth() || (t.getMonth() === b.getMonth() && t.getDate() < b.getDate())) a--; return a; };
+    const validId = (v) => { const id = String(v || '').replace(/\D/g, ''); if (id.length < 5 || id.length > 9) return false; const p = id.padStart(9, '0'); let s = 0; for (let i = 0; i < 9; i++) { const x = Number(p[i]) * ((i % 2) + 1); s += x > 9 ? x - 9 : x; } return s % 10 === 0; };
+    const validPhone = (v) => /^(?:0|\+?972-?)5\d-?\d{3}-?\d{4}$|^0\d{1,2}-?\d{7}$/.test(String(v || '').replace(/\s/g, ''));
+    const today = () => { const x = new Date(); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0, 10); };
+    if (!val('tdate')) F('tdate').value = today();
+    const DRAFT = 'tt-health-draft';
+    const saveDraft = () => { const o = {}; [...f.elements].forEach((el) => { if (!el.name || el.type === 'checkbox') return; if (el.type === 'radio') { if (el.checked) o[el.name] = el.value; } else o[el.name] = el.value; }); try { sessionStorage.setItem(DRAFT, JSON.stringify(o)); } catch (e) {} };
+    try { const o = JSON.parse(sessionStorage.getItem(DRAFT) || 'null'); if (o) Object.keys(o).forEach((k) => { const el = F(k); if (!el) return; if (el.length && el[0] && el[0].type === 'radio') [...el].forEach((r) => { r.checked = r.value === o[k]; }); else el.value = o[k]; }); } catch (e) {}
+    const setErr = (id, msg) => { const el = $('#' + id), er = $('#' + id + '-err'); if (er) er.textContent = msg; if (el) el.setAttribute('aria-invalid', msg ? 'true' : 'false'); return msg ? el : null; };
+    const showQ = (q) => { const yes = (F(q.id).value || '') === 'כן'; $('#qn-' + q.id).hidden = !yes; $('#qdw-' + q.id).hidden = !yes; };
+    QS.forEach(showQ);
+    const minor = () => { const a = ageFrom(val('dob')); const m = a !== null && a < 18; $('#minor-note').hidden = !m; $('#parent-block').hidden = !m; $('#sig-who').textContent = m ? 'חתימת ההורה' : 'חתימה'; return m; };
+    f.addEventListener('input', saveDraft);
+    f.addEventListener('change', (e) => { saveDraft(); minor(); const q = QS.find((x) => x.id === e.target.name); if (q) { showQ(q); $('#fs-' + q.id).classList.remove('invalid'); } });
+
+    /* signature */
+    const cv = $('#sig'), ph = $('#sig-ph'), ctx = cv.getContext('2d'); let empty = true, drawing = false, last = null;
+    const sizeSig = () => { const r = cv.getBoundingClientRect(); if (!r.width) return; const k = window.devicePixelRatio || 1; cv.width = Math.round(r.width * k); cv.height = Math.round(r.height * k); ctx.setTransform(k, 0, 0, k, 0, 0); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, r.width, r.height); ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#1E1A21'; empty = true; ph.hidden = false; };
+    const pos = (e) => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    cv.addEventListener('pointerdown', (e) => { drawing = true; last = pos(e); cv.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.arc(last.x, last.y, 1.2, 0, Math.PI * 2); ctx.fillStyle = '#1E1A21'; ctx.fill(); empty = false; ph.hidden = true; $('#h-sig-err').textContent = ''; });
+    cv.addEventListener('pointermove', (e) => { if (!drawing) return; const p = pos(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p; });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach((t) => cv.addEventListener(t, () => { drawing = false; }));
+    $('#sig-clear').addEventListener('click', sizeSig);
+
+    let step = 1;
+    const go = (n, quiet) => {
+      step = Math.min(3, Math.max(1, n));
+      $$('.hstep', f).forEach((s) => { s.hidden = Number(s.dataset.step) !== step; });
+      $$('.hsteps li').forEach((li) => { const k = Number(li.dataset.s); li.classList.toggle('on', k === step); li.classList.toggle('ok', k < step); if (k === step) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current'); });
+      $('#h-stepnow').textContent = `שלב ${step} מתוך 3`;
+      $('#h-prev').hidden = step === 1;
+      $('#h-next').textContent = step === 3 ? 'שליחה לתום' : 'המשך';
+      if (step === 3) { minor(); requestAnimationFrame(sizeSig); }
+      if (quiet) return;
+      const top = $('.phead') || f; top.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' });
+    };
+    $('#h-prev').addEventListener('click', () => go(step - 1));
+    const validate = () => {
+      const errs = [];
+      if (step === 1) {
+        errs.push(setErr('h-name', val('name').length >= 2 ? '' : 'נא למלא שם מלא'));
+        errs.push(setErr('h-id', !val('idnum') || validId(val('idnum')) ? '' : 'מספר תעודת הזהות לא תקין'));
+        const a = ageFrom(val('dob'));
+        errs.push(setErr('h-dob', a === null ? 'נא לבחור תאריך לידה' : (a < 14 || a > 110) ? 'נא לבדוק את תאריך הלידה' : ''));
+        errs.push(setErr('h-phone', validPhone(val('phone')) ? '' : 'נא למלא מספר טלפון תקין'));
+        errs.push(setErr('h-address', val('address').length >= 4 ? '' : 'נא למלא כתובת מגורים'));
+        errs.push(setErr('h-design', val('design').length >= 2 ? '' : 'ספרו בכמה מילים מה מקעקעים'));
+        errs.push(setErr('h-ephone', !val('ephone') || validPhone(val('ephone')) ? '' : 'מספר הטלפון לא תקין'));
+      }
+      if (step === 2) {
+        let first = null, msg = '';
+        QS.forEach((q) => {
+          const a = F(q.id).value || '', needs = a === 'כן' && q.level !== 'stop' && !val('d_' + q.id);
+          $('#fs-' + q.id).classList.toggle('invalid', !a || needs);
+          if (!a && !first) { first = F(q.id)[0]; msg = 'נא לענות על כל השאלות'; }
+          if (needs && !first) { first = F('d_' + q.id); msg = 'סימנת "כן", נא לפרט בתיבה שמתחת לשאלה'; }
+        });
+        $('#h-q-err').textContent = msg; errs.push(first);
+      }
+      if (step === 3) {
+        const m = minor();
+        if (m) {
+          errs.push(setErr('h-pname', val('pname').length >= 2 ? '' : 'נא למלא את שם ההורה'));
+          errs.push(setErr('h-pid', validId(val('pid')) ? '' : 'מספר תעודת הזהות לא תקין'));
+          errs.push(setErr('h-pphone', validPhone(val('pphone')) ? '' : 'נא למלא מספר טלפון תקין'));
+        }
+        const miss = CONS.filter((c) => c.required && (!c.minorOnly || m) && !F(c.id).checked);
+        $('#h-c-err').textContent = miss.length ? 'נא לאשר את כל סעיפי החובה' : '';
+        errs.push(miss.length ? F(miss[0].id) : null);
+        $('#h-sig-err').textContent = empty ? 'נא לחתום' : '';
+        errs.push(empty ? cv : null);
+      }
+      const first = errs.find(Boolean);
+      if (first) { if (first.focus) first.focus(); if (first.scrollIntoView) first.scrollIntoView({ block: 'center' }); return false; }
+      return true;
+    };
+
+    let rec = null;
+    const record = () => {
+      const age = ageFrom(val('dob')), m = age < 18, ans = (q) => F(q.id).value || '';
+      const r = {
+        submittedAt: new Date().toISOString(), submittedAtText: new Date().toLocaleString('he-IL', { dateStyle: 'short', timeStyle: 'short' }),
+        name: val('name'), idnum: val('idnum'), dob: val('dob'), age, phone: val('phone'), email: val('email'),
+        tattooDate: val('tdate'), area: val('area'), address: val('address'), design: val('design'),
+        emergency: val('ename') || val('ephone') ? { name: val('ename'), phone: val('ephone') } : null,
+        answers: QS.map((q) => ({ id: q.id, q: q.text, a: ans(q), detail: ans(q) === 'כן' ? val('d_' + q.id) : '' })),
+        details: QS.filter((q) => ans(q) === 'כן' && val('d_' + q.id)).map((q) => `• ${q.text.replace(/\?$/, '')}: ${val('d_' + q.id)}`).join('\n'),
+        consents: CONS.filter((c) => !c.minorOnly || m).map((c) => ({ id: c.id, text: c.text, ok: !!F(c.id).checked })),
+        minor: m, parent: m ? { name: val('pname'), id: val('pid'), phone: val('pphone') } : null,
+        signature: cv.toDataURL('image/png')
+      };
+      r.flags = QS.filter((q) => ans(q) === 'כן').map((q) => ({ level: q.level, q: q.text, note: q.note }));
+      if (m) r.flags.push({ level: 'check', q: `קטין/ה (גיל ${age})`, note: 'לוודא שההורה נוכח/ת בסטודיו ומציג/ה תעודה מזהה.' });
+      r.review = r.flags.some((x) => x.level === 'stop') ? 'stop' : r.flags.length ? 'check' : '';
+      r.extraFields = [{ label: 'כתובת מגורים', value: r.address }, { label: 'מה מקעקעים', value: r.design },
+        { label: 'איש קשר לחירום', value: r.emergency ? [r.emergency.name, r.emergency.phone].filter(Boolean).join(' · ') : '' }, { label: 'נשלח דרך', value: 'האתר' }].filter((x) => x.value);
+      return r;
+    };
+    const summary = (r) => [`הצהרת בריאות – ${r.name}`, `טלפון: ${r.phone}`, `תאריך לידה: ${r.dob}`, `מה מקעקעים: ${r.design}`, '', ...r.answers.filter((a) => a.a === 'כן').map((a) => `כן: ${a.q}${a.detail ? ' – ' + a.detail : ''}`), r.answers.some((a) => a.a === 'כן') ? '' : 'כל התשובות: לא', '', '(החתימה לא נשלחת בוואטסאפ, אחתום שוב בסטודיו)'].join('\n');
+    const showDone = (ok) => {
+      const rv = rec.review;
+      f.hidden = true; done.hidden = false;
+      done.innerHTML = ok ? `<span class="hdone-ic" aria-hidden="true">✓</span><h2>ההצהרה נשלחה, <span class="iri-text">תודה!</span></h2>
+        <p>ההצהרה החתומה הגיעה לתום. נתראה בסטודיו!</p>
+        ${rv ? `<p class="qn qn-${rv}">${rv === 'stop' ? 'סימנת תשובה שבגללה לא מקעקעים עד בירור. תום תיצור איתך קשר.' : 'סימנת כמה תשובות שתום תעבור עליהן לפני התור. אם צריך, היא תיצור איתך קשר.'}</p>` : ''}
+        <p class="hnote"><b>לפני שמגיעים:</b> לאכול ארוחה טובה, לשתות מים, ולא לשתות אלכוהול יום לפני.</p>
+        ${DEMO ? '<p class="gift-demo">תצוגה מקדימה: ההצהרה לא נשלחה באמת.</p>' : ''}
+        <div class="hacts"><a class="btn btn-soft" href="process.html">הוראות לפני ואחרי</a><a class="btn btn-iri" href="index.html">חזרה לאתר</a></div>`
+        : `<span class="hdone-ic bad" aria-hidden="true">!</span><h2>לא הצלחנו לשלוח את ההצהרה</h2>
+        <p>אולי אין כרגע אינטרנט. אפשר לנסות שוב, או לשלוח לתום את הסיכום בוואטסאפ.</p>
+        <div class="hacts"><button type="button" class="btn btn-iri" id="h-retry">לנסות לשלוח שוב</button><a class="btn btn-soft" href="${wa(summary(rec))}" target="_blank" rel="noopener">שליחת סיכום בוואטסאפ<span class="sr"> (נפתח בחלון חדש)</span></a></div>`;
+      done.focus(); done.scrollIntoView({ block: 'start' });
+      const rt = $('#h-retry'); if (rt) rt.addEventListener('click', () => send());
+    };
+    const send = async () => {
+      const btn = $('#h-next'); btn.disabled = true; btn.textContent = 'שולחים לתום…';
+      let ok = true;
+      if (!DEMO) {
+        try {
+          const r = await fetch(H.endpoint, { method: 'POST', body: JSON.stringify({ kind: 'health', ...rec }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+          const j = await r.json().catch(() => ({ ok: true })); ok = r.ok && !(j && j.ok === false);
+        } catch (e) { ok = false; }
+      } else await new Promise((r) => setTimeout(r, 700));
+      btn.disabled = false; btn.textContent = 'שליחה לתום';
+      if (ok) { try { sessionStorage.removeItem(DRAFT); } catch (e) {} }
+      showDone(ok);
+    };
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+      if (step < 3) { go(step + 1); const n = $(`.hstep[data-step="${step}"] input, .hstep[data-step="${step}"] textarea`, f); if (n) setTimeout(() => n.focus({ preventScroll: true }), 50); return; }
+      rec = record(); send();
+    });
+    window.addEventListener('resize', () => { if (step === 3 && empty) sizeSig(); });
+    minor(); go(1, true);
+  }
+
+  /* ---------- promo of the month (same source as the app) ---------- */
+  const pbar = $('#promo-bar');
+  if (pbar && pbar.dataset.api) {
+    const fmt = (iso) => { const [y, m, dd] = String(iso).split('-'); return `${dd}/${m}/${y}`; };
+    const esc2 = (t) => String(t == null ? '' : t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const today2 = () => { const x = new Date(); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0, 10); };
+    const ctl = 'AbortController' in window ? new AbortController() : null; const tm = setTimeout(() => ctl && ctl.abort(), 8000);
+    fetch(pbar.dataset.api + '?action=promo', { signal: ctl ? ctl.signal : undefined }).then((r) => r.json()).then((j) => {
+      const p = j && j.ok && j.promo;
+      if (!p || !p.title || !(p.until >= today2())) return;
+      const link = wa(`היי תום, ראיתי באתר את מבצע החודש – "${p.title}". אשמח לקבוע תור 🙂`);
+      const card = $('#promo-card');
+      if (card) {
+        const img = p.image && /^https:\/\//.test(p.image) ? `<img src="${esc2(p.image)}" alt="" loading="lazy">` : `<img src="assets/img/logo-ink.png" alt="" class="pc-logo">`;
+        card.innerHTML = `<div class="pc-in"><div class="pc-img">${img}</div><div class="pc-txt"><span class="pc-badge">מבצע החודש</span><h2>${esc2(p.title)}</h2>${p.text ? `<p>${esc2(p.text).replace(/\n/g, '<br>')}</p>` : ''}</div><div class="pc-act"><a class="btn pc-wa brand-wa" href="${link}" target="_blank" rel="noopener">לקביעת תור במבצע<span class="sr"> (נפתח בחלון חדש)</span></a><span class="pc-until">בתוקף עד ${esc2(fmt(p.until))}</span></div></div>`;
+        card.hidden = false;
+        const im = $('.pc-img img', card); if (im) im.addEventListener('error', () => { im.src = 'assets/img/logo-ink.png'; im.className = 'pc-logo'; }, { once: true });
+      } else if (store.get('tt-promo-bar-x') !== p.id) {
+        pbar.innerHTML = `<div class="wrap"><span class="pb-t"><b>מבצע החודש:</b> ${esc2(p.title)}<span class="pb-until"> · עד ${esc2(fmt(p.until))}</span></span><a href="${pbar.dataset.home}">לפרטים</a><button type="button" class="pb-x" aria-label="סגירת הודעת המבצע">✕</button></div>`;
+        pbar.hidden = false;
+        $('.pb-x', pbar).addEventListener('click', () => { pbar.hidden = true; store.set('tt-promo-bar-x', p.id); });
+      }
+    }).catch(() => {}).finally(() => clearTimeout(tm));
+  }
 })();
