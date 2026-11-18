@@ -108,7 +108,7 @@ def head(title, desc, path, R, og_img='assets/img/og.jpg', ld=None, robots='inde
 
 def header(cur, R):
     items = ''.join(f'<li><a href="{R}{h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}>{t}</a></li>' for h, t, _ in NAV)
-    ditems = ''.join(f'<li><a href="{R}{h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}><span>{t}</span></a></li>' for h, t in [('index.html', 'בית'), ('works.html', 'עבודות'), ('guide.html', 'איזה קעקוע מתאים לי?'), ('tom.html', 'תום והסטודיו'), ('process.html', 'לפני שמגיעים'), ('gift.html', 'שובר מתנה'), ('app.html', 'האפליקציה')])
+    ditems = ''.join(f'<li><a href="{h if h.startswith("http") else R + h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}><span>{t}</span></a></li>' for h, t in [('index.html', 'בית'), ('works.html', 'עבודות'), ('guide.html', 'איזה קעקוע מתאים לי?'), ('tom.html', 'תום והסטודיו'), ('process.html', 'לפני שמגיעים'), (APP + '#/health', 'הצהרת בריאות'), ('gift.html', 'שובר מתנה'), ('app.html', 'האפליקציה')])
     return f'''<body>
 <a class="skip" href="#main">דילוג לתוכן הראשי</a>
 <header class="hdr">
@@ -732,6 +732,10 @@ OLD = {'קצת-עליי': 'tom.html', 'קצת-עליי/זאת-אני': 'tom.html
        'מאמרים/המדריך-השלם-למכונות-קעקועים-סוגים-יתרונות-ומה-כדאי-לדעת': 'journal/machines.html'}
 for f_, t_ in [('studio.html', 'tom.html#studio'), ('faq.html', 'process.html#faq')]:
     open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/{t_}"><meta http-equiv="refresh" content="0; url={t_}"><script>location.replace({json.dumps(t_)})</script></head><body><p>העמוד עבר: <a href="{t_}">להמשך</a></p></body></html>')
+HEALTH_URL = APP + '#/health'
+for f_ in ('health.html', os.path.join('health', 'index.html'), os.path.join('הצהרה', 'index.html')):
+    os.makedirs(os.path.dirname(os.path.join(ROOT, f_)) or ROOT, exist_ok=True)
+    open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>הצהרת בריאות | Tomchu Tattoo</title><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url={HEALTH_URL}"><script>location.replace({json.dumps(HEALTH_URL)})</script></head><body style="font-family:sans-serif;text-align:center;padding:40px"><p>פותחים את טופס הצהרת הבריאות… <a href="{HEALTH_URL}">לחצו כאן אם לא נפתח</a></p></body></html>')
 for old, new in OLD.items():
     d = os.path.join(ROOT, old); os.makedirs(d, exist_ok=True)
     up = '../' * (old.count('/') + 1); tgt = up + new; full = SITE + '/' + new
