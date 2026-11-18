@@ -95,7 +95,10 @@ def head(title, desc, path, R, og_img='assets/img/og.jpg', ld=None, robots='inde
 <meta property="og:image" content="{SITE}/{og_img}">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/png" sizes="32x32" href="{R}assets/img/favicon-32.png">
+<link rel="icon" href="{R}favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="{R}assets/img/favicon-192.png">
+<link rel="icon" type="image/png" sizes="96x96" href="{R}assets/img/favicon-96.png">
+<link rel="icon" type="image/png" sizes="48x48" href="{R}assets/img/favicon-48.png">
 <link rel="apple-touch-icon" href="{R}assets/img/apple-touch-icon.png">
 <link rel="manifest" href="{R}site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
