@@ -811,7 +811,7 @@ for f_, t_ in [('studio.html', 'tom.html#studio'), ('faq.html', 'process.html#fa
     open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/{t_}"><meta http-equiv="refresh" content="0; url={t_}"><script>location.replace({json.dumps(t_)})</script></head><body><p>העמוד עבר: <a href="{t_}">להמשך</a></p></body></html>')
 for f_, up_, tg_ in ((os.path.join('health', 'index.html'), '../', 'health.html'), (os.path.join('הצהרה', 'index.html'), '../', 'health.html'), (os.path.join('care', 'index.html'), '../', 'process.html#care'), (os.path.join('טיפול', 'index.html'), '../', 'process.html#care')):
     os.makedirs(os.path.dirname(os.path.join(ROOT, f_)), exist_ok=True)
-    open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>הצהרת בריאות | Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/{tg_.split('#')[0]}"><meta http-equiv="refresh" content="0; url={up_}{tg_}"></head><body><a href="{up_}{tg_}">המשך</a></body></html>')
+    open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/{tg_.split('#')[0]}"><meta http-equiv="refresh" content="0; url={up_}{tg_}"></head><body><a href="{up_}{tg_}">המשך</a></body></html>')
 for old, new in OLD.items():
     d = os.path.join(ROOT, old); os.makedirs(d, exist_ok=True)
     up = '../' * (old.count('/') + 1); tgt = up + new; full = SITE + '/' + new
