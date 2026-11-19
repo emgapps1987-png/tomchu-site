@@ -512,4 +512,47 @@
       }
     }).catch(() => {}).finally(() => clearTimeout(tm));
   }
+
+  /* ---------- hidden hummingbird: appears now and then, behind the content ---------- */
+  (() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const img = (d.querySelector('link[rel="icon"][sizes="48x48"]') || {}).href || '';
+    const base = img ? img.replace(/favicon\.ico$/, '') : '';
+    const fx = d.createElement('div'); fx.className = 'hb-fx'; fx.setAttribute('aria-hidden', 'true'); d.body.appendChild(fx);
+    const src = (n) => base + 'assets/img/' + n + '.webp';
+    const rnd = (a, b) => a + Math.random() * (b - a), eo = (p) => 1 - Math.pow(1 - p, 3), eio = (p) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+    let busy = false, tm = 0;
+    const off = () => root.classList.contains('a-still') || d.hidden;
+    const sched = (a, b) => { clearTimeout(tm); tm = setTimeout(run, rnd(a, b)); };
+    function run() {
+      if (busy) return; if (off()) { sched(15000, 30000); return; }
+      busy = true;
+      const W = innerWidth, H = innerHeight, el = d.createElement('div'); el.className = 'hb';
+      el.innerHTML = `<div class="hb-in"><img class="w g" src="${src('bird-wing')}" alt=""><img src="${src('bird-body')}" alt=""><img class="w" src="${src('bird-wing')}" alt=""></div>`;
+      fx.appendChild(el);
+      const fromLeft = Math.random() < .5; let x = fromLeft ? -60 : W + 20, y = rnd(H * .15, H * .6), face = fromLeft ? 1 : -1;
+      const steps = [], n = 2 + Math.floor(Math.random() * 2);
+      for (let k = 0; k < n; k++) {
+        const px = fromLeft ? rnd(W * (.12 + k * .22), W * (.3 + k * .22)) : rnd(W * (.7 - k * .22), W * (.88 - k * .22)), py = rnd(H * .12, H * .7);
+        steps.push({ t: 'dart', x: px, y: py, d: rnd(260, 420) }, { t: 'hover', d: rnd(900, 1700) });
+        if (Math.random() < .6) steps.push({ t: 'dart', x: px + rnd(-36, 36), y: py + rnd(-26, 18), d: rnd(140, 220), hop: 1 });
+        if (Math.random() < .5) steps.push({ t: 'hover', d: rnd(500, 1000) });
+      }
+      steps.push({ t: 'dart', x: Math.random() < .7 ? (fromLeft ? W + 80 : -80) : (fromLeft ? -80 : W + 80), y: rnd(-60, H * .3), d: rnd(300, 450) });
+      let si = 0, st = null, sx = x, sy = y, ph = Math.random() * 9;
+      const f = (t) => {
+        const s = steps[si];
+        if (!s || off()) { el.remove(); busy = false; sched(45000, 80000); return; }
+        if (st == null) { st = t; sx = x; sy = y; if (s.t === 'dart' && !s.hop && Math.abs(s.x - x) > 4) face = s.x > x ? 1 : -1; }
+        const p = Math.min(1, (t - st) / s.d); let px, py, rot; ph += .35;
+        if (s.t === 'dart') { const q = s.hop ? eio(p) : eo(p); px = sx + (s.x - sx) * q; py = sy + (s.y - sy) * q; rot = Math.max(-25, Math.min(25, Math.atan2(s.y - sy, Math.abs(s.x - sx) + 1) * 57)) * (1 - p * .6) * face; }
+        else { px = sx + Math.sin(ph * 1.7) * 1.6; py = sy + Math.sin(ph) * 2.4 + Math.sin(ph * .23) * 3; rot = -18 * face + Math.sin(ph * .5) * 3; }
+        el.classList.toggle('left', face < 0); el.style.transform = `translate(${px}px,${py}px) rotate(${rot}deg)`;
+        if (p >= 1) { if (s.t === 'dart') { x = s.x; y = s.y; } si++; st = null; }
+        requestAnimationFrame(f);
+      };
+      requestAnimationFrame(f);
+    }
+    sched(9000, 20000);
+  })();
 })();
