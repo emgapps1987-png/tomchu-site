@@ -111,7 +111,7 @@ def head(title, desc, path, R, og_img='assets/img/og.jpg', ld=None, robots='inde
 
 def header(cur, R):
     items = ''.join(f'<li><a href="{R}{h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}>{t}</a></li>' for h, t, _ in NAV)
-    ditems = ''.join(f'<li><a href="{h if h.startswith("http") else R + h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}><span>{t}</span></a></li>' for h, t in [('index.html', 'בית'), ('works.html', 'עבודות'), ('guide.html', 'איזה קעקוע מתאים לי?'), ('tom.html', 'תום והסטודיו'), ('process.html', 'לפני שמגיעים'), ('health.html', 'הצהרת בריאות'), ('gift.html', 'שובר מתנה'), ('app.html', 'האפליקציה')])
+    ditems = ''.join(f'<li><a href="{h if h.startswith("http") else R + h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}><span>{t}</span></a></li>' for h, t in [('index.html', 'בית'), ('works.html', 'עבודות'), ('guide.html', 'איזה קעקוע מתאים לי?'), ('tom.html', 'תום והסטודיו'), ('process.html', 'לפני שמגיעים'), ('process.html#care', 'טיפול בקעקוע חדש'), ('health.html', 'הצהרת בריאות'), ('gift.html', 'שובר מתנה'), ('app.html', 'האפליקציה')])
     API, WA = CFG.get('healthEndpoint', ''), CFG['whatsapp']
     return f'''<body>
 <a class="skip" href="#main">דילוג לתוכן הראשי</a>
@@ -520,7 +520,7 @@ fq = ''.join(f'<details{" open" if i == 0 else ""}><summary>{e(f["q"])}</summary
 cr = [('index.html', 'בית'), (None, 'לפני שמגיעים')]
 process = phead('לפני <span class="iri-text">שמגיעים</span>', 'מהרגע שיש רעיון ועד שהקעקוע מחלים – תום איתך בכל שלב, וכל שלב מחובר לאפליקציה.', cr, '') + f'''
 <section aria-labelledby="steps-h"><div class="wrap"><h2 id="steps-h" class="sr">ארבעה שלבים</h2><ol class="steps">{sl}</ol></div></section>
-<section aria-labelledby="care-h" style="padding-top:0">
+<section id="care" aria-labelledby="care-h" style="padding-top:0">
   <div class="wrap">
     <div class="sec-head"><h2 id="care-h">מדריך <span class="iri-text">ההחלמה</span></h2></div>
     <div class="cards">{cs}</div>
@@ -809,9 +809,9 @@ OLD = {'קצת-עליי': 'tom.html', 'קצת-עליי/זאת-אני': 'tom.html
        'מאמרים/המדריך-השלם-למכונות-קעקועים-סוגים-יתרונות-ומה-כדאי-לדעת': 'journal/machines.html'}
 for f_, t_ in [('studio.html', 'tom.html#studio'), ('faq.html', 'process.html#faq')]:
     open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/{t_}"><meta http-equiv="refresh" content="0; url={t_}"><script>location.replace({json.dumps(t_)})</script></head><body><p>העמוד עבר: <a href="{t_}">להמשך</a></p></body></html>')
-for f_, up_ in ((os.path.join('health', 'index.html'), '../'), (os.path.join('הצהרה', 'index.html'), '../')):
+for f_, up_, tg_ in ((os.path.join('health', 'index.html'), '../', 'health.html'), (os.path.join('הצהרה', 'index.html'), '../', 'health.html'), (os.path.join('care', 'index.html'), '../', 'process.html#care'), (os.path.join('טיפול', 'index.html'), '../', 'process.html#care')):
     os.makedirs(os.path.dirname(os.path.join(ROOT, f_)), exist_ok=True)
-    open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>הצהרת בריאות | Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/health.html"><meta http-equiv="refresh" content="0; url={up_}health.html"></head><body><a href="{up_}health.html">להצהרת הבריאות</a></body></html>')
+    open(os.path.join(ROOT, f_), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>הצהרת בריאות | Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/{tg_.split('#')[0]}"><meta http-equiv="refresh" content="0; url={up_}{tg_}"></head><body><a href="{up_}{tg_}">המשך</a></body></html>')
 for old, new in OLD.items():
     d = os.path.join(ROOT, old); os.makedirs(d, exist_ok=True)
     up = '../' * (old.count('/') + 1); tgt = up + new; full = SITE + '/' + new

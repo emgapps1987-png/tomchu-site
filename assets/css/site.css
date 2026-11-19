@@ -728,7 +728,7 @@ html.a-contrast .drawer-panel { background: #000 !important; backdrop-filter: no
   .tabs a svg { width: 20px; height: 20px; }
   body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
 }
-#studio, #faq { scroll-margin-top: 84px; } .anchor { display: block; height: 0; }
+#studio, #faq, #care { scroll-margin-top: 84px; } .anchor { display: block; height: 0; }
 @media (max-width: 860px) {
   .a11y-btn { inset-inline-start: auto; inset-inline-end: 10px; bottom: calc(82px + env(safe-area-inset-bottom)); width: 46px; height: 46px; }
   .a11y-btn svg { width: 26px; height: 26px; }
