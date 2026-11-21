@@ -119,7 +119,7 @@ def header(cur, R):
 <header class="hdr">
   <div class="wrap">
     <button type="button" class="menu-btn" data-menu aria-expanded="false" aria-controls="drawer">{ic("menu")}<span>תפריט</span></button>
-    <a class="brand" href="{R}index.html"><img src="{R}assets/img/logo-96.png" width="44" height="44" alt=""><span>Tomchu Tattoo</span><span class="sr"> – לעמוד הבית</span></a>
+    <a class="brand" href="{R}index.html"><img class="lg-d" src="{R}assets/img/logo-96.png" width="44" height="44" alt=""><img class="lg-l" src="{R}assets/img/logo-light-96.png" width="44" height="44" alt=""><span>Tomchu Tattoo</span><span class="sr"> – לעמוד הבית</span></a>
     <nav class="mainnav" aria-label="ניווט ראשי"><ul>{items}</ul></nav>
     <div class="hdr-act">
       <button type="button" class="icon-btn theme-btn" aria-pressed="false" aria-label="מעבר לתצוגה בהירה">{ic("moon", "moon")}{ic("sun", "sun")}</button>
@@ -144,7 +144,7 @@ def footer(cur, R):
 <footer class="ftr">
   <div class="wrap">
     <div class="cols">
-      <div><a class="brand" href="{R}index.html"><img src="{R}assets/img/logo-96.png" width="44" height="44" alt=""><span>Tomchu Tattoo</span></a>
+      <div><a class="brand" href="{R}index.html"><img class="lg-d" src="{R}assets/img/logo-96.png" width="44" height="44" alt=""><img class="lg-l" src="{R}assets/img/logo-light-96.png" width="44" height="44" alt=""><span>Tomchu Tattoo</span></a>
         <p>סטודיו פרטי לקעקועים של תום גבע.<br>Fine Line, ריאליזם וקאברים.<br>{CFG["address"]} · בתיאום מראש</p></div>
       <div><h2>דברו עם תום</h2><ul>
         <li><a class="soc-pill" href="{WA}" target="_blank" rel="noopener">{ic("wa")}וואטסאפ<span class="sr"> (נפתח בחלון חדש)</span></a></li>
@@ -351,7 +351,7 @@ home = f'''
 <section class="hero-ink" aria-labelledby="hero-h">
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="12" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"/></filter></svg>
   <div class="wrap hi-in">
-    <div class="hi-orb" aria-hidden="true"><div class="hi-goo"><span class="hi-core"></span><i style="--s:70px;--c:#18B58A;--a:0deg;--r:92px;--d:.25s;--t:14s"></i><i style="--s:54px;--c:#16B3C2;--a:60deg;--r:100px;--d:.32s;--t:11s"></i><i style="--s:76px;--c:#4C82E6;--a:130deg;--r:88px;--d:.38s;--t:16s"></i><i style="--s:48px;--c:#9B5BD6;--a:195deg;--r:104px;--d:.3s;--t:12s"></i><i style="--s:66px;--c:#E8467F;--a:255deg;--r:94px;--d:.36s;--t:15s"></i><i style="--s:40px;--c:#2A5FC4;--a:310deg;--r:110px;--d:.42s;--t:10s"></i></div><img class="hi-logo" src="{{R}}assets/img/logo-ink.png" width="512" height="512" alt=""></div>
+    <div class="hi-orb" aria-hidden="true"><div class="hi-goo"><span class="hi-core"></span><i style="--s:70px;--c:#18B58A;--a:0deg;--r:92px;--d:.25s;--t:14s"></i><i style="--s:54px;--c:#16B3C2;--a:60deg;--r:100px;--d:.32s;--t:11s"></i><i style="--s:76px;--c:#4C82E6;--a:130deg;--r:88px;--d:.38s;--t:16s"></i><i style="--s:48px;--c:#9B5BD6;--a:195deg;--r:104px;--d:.3s;--t:12s"></i><i style="--s:66px;--c:#E8467F;--a:255deg;--r:94px;--d:.36s;--t:15s"></i><i style="--s:40px;--c:#2A5FC4;--a:310deg;--r:110px;--d:.42s;--t:10s"></i></div><img class="hi-logo lg-d" src="{{R}}assets/img/logo-ink.png" width="512" height="512" alt=""><img class="hi-logo lg-l" src="{{R}}assets/img/logo-light.png" width="512" height="512" alt=""></div>
     <div class="hi-text">
       <span class="hi-eye">סטודיו פרטי לקעקועים · אלפי מנשה</span>
       <h1 id="hero-h"><span class="hi-w" style="--d:1.75s">הכל</span> <span class="hi-w" style="--d:1.95s">מתחיל</span> <span class="hi-w iri-flow" style="--d:2.15s">בקעקוע</span></h1>
@@ -731,7 +731,7 @@ app = phead('הסטודיו של תום <span class="iri-text">בכיס</span>',
     <p><a href="{APP}" target="_blank" rel="noopener">לפתוח את האפליקציה בדפדפן<span class="sr"> (נפתח בחלון חדש)</span></a></p>
   </div>
   <div class="phone" aria-hidden="true">
-    <div class="pt"><img src="{{R}}assets/img/logo-96.png" alt="" width="22" height="22"><span dir="ltr">Tomchu Tattoo</span></div>
+    <div class="pt"><img class="lg-d" src="{{R}}assets/img/logo-96.png" alt="" width="22" height="22"><img class="lg-l" src="{{R}}assets/img/logo-light-96.png" alt="" width="22" height="22"><span dir="ltr">Tomchu Tattoo</span></div>
     <div class="ph"><img src="{{R}}assets/img/works/work23-600.webp" alt="" width="600" height="400"></div>
     <div class="g"><span>הצהרת בריאות</span><span>וואטסאפ לתום</span><span class="w">שובר מתנה – לפנק מישהו בקעקוע</span><span>הדמיה על הגוף</span><span>רעיונות</span></div>
   </div>

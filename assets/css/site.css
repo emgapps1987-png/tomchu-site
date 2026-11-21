@@ -868,3 +868,9 @@ html.a-still .hb-fx { display: none; }
 @keyframes nd{0%{opacity:0;transform:scale(.4)}25%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}}
 @media (prefers-reduced-motion: reduce){.feed-fx{display:none}}
 html.a-still .feed-fx{display:none}
+
+/* ---------- light theme: transparent logo with dark lettering ---------- */
+.lg-l { display: none !important; }
+html.light .lg-d { display: none !important; }
+html.light .lg-l { display: block !important; }
+html.light .brand img.lg-l { background: transparent; border: 0; box-shadow: none; border-radius: 0; }
