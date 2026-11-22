@@ -817,6 +817,52 @@ for old, new in OLD.items():
     up = '../' * (old.count('/') + 1); tgt = up + new; full = SITE + '/' + new
     open(os.path.join(d, 'index.html'), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{full}"><meta http-equiv="refresh" content="0; url={tgt}"><script>location.replace({json.dumps(tgt)})</script></head><body><p>העמוד עבר: <a href="{tgt}">להמשך</a></p></body></html>')
 
+# ================================================================ SEO landing pages
+def _gal(tags, n=6):
+    items = [w for w in C['WORKS'] if w['tag'] in tags][:n]
+    li = ''.join(f'<li data-tag="{w["tag"]}"><button type="button" data-full="{{R}}assets/img/works/work{int(w["id"][1:])}-1000.webp" data-alt="{e(w["alt"])}" aria-label="{e(w["alt"])} – הגדלה">{pic(int(w["id"][1:]), w["alt"], sizes="(max-width: 520px) 100vw, 290px")}</button></li>' for w in items)
+    return f'<ul class="masonry" id="gallery">{li}</ul>'
+LB = '''<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="תצוגת תמונה מוגדלת" hidden><div class="lb-top"><p><span class="lb-cap"></span> · <span class="lb-pos"></span></p><button type="button" class="close" aria-label="סגירה">✕</button></div><div class="lb-stage"><img alt=""></div><button type="button" class="prev" aria-label="התמונה הקודמת">›</button><button type="button" class="next" aria-label="התמונה הבאה">‹</button></div>'''
+def _faq(qs):
+    return ''.join(f'<details><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in qs)
+CITIES = [
+ ('tattoo-alfei-menashe', 'אלפי מנשה', 'ממש כאן, בקדרון 48'),
+ ('tattoo-kfar-saba', 'כפר סבא', 'נסיעה קצרה מכפר סבא'),
+ ('tattoo-raanana', 'רעננה', 'נסיעה קצרה מרעננה'),
+ ('tattoo-hod-hasharon', 'הוד השרון', 'נסיעה קצרה מהוד השרון'),
+ ('tattoo-karnei-shomron', 'קרני שומרון', 'נסיעה קצרה מקרני שומרון'),
+ ('tattoo-tzur-yigal', 'צור יגאל', 'נסיעה קצרה מצור יגאל'),
+]
+STYLES = [
+ ('fine-line-tattoo', 'קעקוע פיין ליין (Fine Line)', ['fine'], 'קווים דקים ומדויקים, פרטים קטנים ועדינים – הסגנון שתום הכי אוהבת לעבוד בו.',
+  [('כמה זמן מחזיק קעקוע פיין ליין?', 'קו דק שנעשה נכון ובעומק הנכון נשאר יפה לאורך שנים. חשוב לשמור עליו בשבועות הראשונים ולהגן מהשמש.'),
+   ('מה הגודל המינימלי?', 'תלוי בכמות הפרטים. בשיחת הייעוץ תום תתאים את הגודל כך שהקווים לא יתחברו עם הזמן.')]),
+ ('cover-up-tattoo', 'קאבר וחידוש קעקוע ישן', ['ba'], 'קעקוע ישן שדהה או שכבר לא מתאים? אפשר לחדש אותו או לעצב מעליו משהו חדש.',
+  [('אפשר לכסות כל קעקוע?', 'לא תמיד, וזה תלוי בגודל ובכהות של הקעקוע הקיים. שולחים תמונה בוואטסאפ ותום אומרת בכנות מה אפשר.'),
+   ('חידוש או כיסוי – מה ההבדל?', 'בחידוש מחזקים את הקווים והצבעים של אותו עיצוב. בכיסוי מעצבים עיצוב חדש שמסתיר את הישן.')]),
+ ('color-tattoo', 'קעקוע צבעוני עדין', ['color'], 'צבע רך ומדויק שמשתלב עם קו עדין – פרחים, ציפורים ועיצובים אישיים.',
+  [('צבע דוהה מהר?', 'כל קעקוע מתבהר מעט עם השנים. הגנה מהשמש ולחות שומרות על הצבע הרבה יותר זמן.')]),
+]
+BASEQ = [(f['q'], f['a']) for f in C['FAQ'][:3]]
+def _land(slug, h1, lead, tags, qs, crumb):
+    cr = [('index.html', 'בית'), (None, crumb)]
+    body = phead(h1, '', cr, '') + f'''
+<section><div class="wrap stack"><p class="lead" style="max-width:60ch">{lead}</p>
+<div class="ctas"><a class="btn btn-iri" href="{WA}" target="_blank" rel="noopener">לשיחת ייעוץ בוואטסאפ</a><a class="btn btn-ghost" href="{{R}}works.html">לכל העבודות</a></div></div></section>
+<section style="padding-top:0"><div class="wrap"><h2>עבודות של תום</h2>{_gal(tags)}</div></section>
+<section style="padding-top:0"><div class="wrap stack"><h2>שאלות נפוצות</h2><div class="faq">{_faq(qs)}</div></div></section>
+<section style="padding-top:0"><div class="wrap stack"><h2>איפה הסטודיו</h2><p>סטודיו פרטי בקדרון 48, אלפי מנשה. חניה בשפע ובחינם, בתיאום מראש.</p>
+<div class="ctas"><a class="btn btn-ghost" href="{{R}}contact.html">הגעה וקביעת תור</a></div></div></section>{LB}'''
+    ld = [crumbs_ld(cr), {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in qs]}]
+    return body, ld
+for slug, city, near in CITIES:
+    lead = f'מחפשים מקעקעת ב{city} והסביבה? {near} נמצא הסטודיו הפרטי של תום גבע – Fine Line, צבע עדין וקאברים, בעיצוב אישי, עם ציוד חד־פעמי ואווירה רגועה.'
+    body, ld = _land(slug, f'קעקועים <span class="iri-text">ב{city}</span> והסביבה', lead, ['fine', 'color', 'sketch'], BASEQ, f'קעקועים ב{city}')
+    page(f'{slug}.html', f'קעקועים ב{city} – סטודיו של תום גבע | Tomchu Tattoo', lead[:155], body, ld=ld)
+for slug, name, tags, lead, qs in STYLES:
+    body, ld = _land(slug, f'<span class="iri-text">{name}</span>', lead + ' בסטודיו פרטי באלפי מנשה, קרוב לכפר סבא, רעננה והוד השרון.', tags, qs + BASEQ[:1], name)
+    page(f'{slug}.html', f'{name} – תום גבע | Tomchu Tattoo', (lead + ' סטודיו פרטי באלפי מנשה.')[:155], body, ld=ld)
+
 # ================================================================ sitemap, robots, manifest
 pri = {'index.html': '1.0', 'works.html': '0.9', 'contact.html': '0.9', 'guide.html': '0.8', 'studio.html': '0.8', 'tom.html': '0.8'}
 urls = ''.join(f'<url><loc>{SITE}/{"" if p == "index.html" else p}</loc><lastmod>{TODAY.isoformat()}</lastmod><priority>{pri.get(p, "0.6")}</priority></url>' for p in PAGES)
