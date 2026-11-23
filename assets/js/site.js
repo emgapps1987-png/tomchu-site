@@ -607,4 +607,3 @@
 
 })();
 ;(function(){var m=document.getElementById('motto');if(!m)return;if(!('IntersectionObserver'in window)){m.classList.add('on');return}new IntersectionObserver(function(e,o){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');o.unobserve(x.target)}})},{threshold:.5}).observe(m)})();
-;(function(){var v=document.getElementById('tom-reel');if(!v)return;var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;if(rm){v.controls=true;return}if(!('IntersectionObserver'in window)){v.preload='auto';v.play().catch(function(){});return}new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){v.play().catch(function(){})}else{v.pause()}})},{threshold:.35}).observe(v)})();

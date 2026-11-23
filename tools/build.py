@@ -363,7 +363,6 @@ home = f'''
   <div class="wrap"><div id="promo-card" class="promo-card" hidden></div></div>
   <div class="wrap"><div class="tom-strip hi-rv" style="--d:3s"><div class="ph"><img src="{{R}}assets/img/tom-studio-700.webp" width="700" height="394" alt="תום מקעקעת לקוחה בסטודיו שלה באלפי מנשה"></div><div><h2>אמנית, אמא, <span class="iri-text">ומקעקעת עם נשמה</span></h2><a class="btn btn-ghost" href="{{R}}tom.html">הסיפור של תום</a></div></div></div>
   <div class="wrap"><div class="motto" id="motto"><p><span class="w" style="--i:0">״אצלי</span> <span class="w" style="--i:1">אין</span> <span class="w" style="--i:2">חוקים</span><br><span class="w" style="--i:3">רק</span> <span class="w" style="--i:4">חלומות</span> <span class="w" style="--i:5">שמתגשמים.״</span></p><span class="sig">תום גבע</span></div></div>
-  <div class="wrap"><figure class="reel"><video id="tom-reel" muted loop playsinline preload="none" poster="{{R}}assets/video/tom-reel-wide-poster.jpg" aria-label="תום מקעקעת בסטודיו – סרטון קצר"><source src="{{R}}assets/video/tom-reel-wide.mp4" type="video/mp4"></video></figure></div>
 </section>
 <section aria-labelledby="tiles-h">
   <div class="wrap">
