@@ -892,3 +892,4 @@ html.light .brand img.lg-l { background: transparent; border: 0; box-shadow: non
 @media (min-width:700px){.reel{gap:20px}.reel figure{border-radius:22px}.reel video{border-radius:20px}}
 .hero-reel{width:100%;margin:18px 0 6px;gap:8px}
 @media (min-width:700px){.hero-reel{gap:14px}}
+.hero-ink h1{font-size:clamp(1.9rem,8.4vw,3.6rem);white-space:nowrap}
