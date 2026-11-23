@@ -890,3 +890,5 @@ html.light .brand img.lg-l { background: transparent; border: 0; box-shadow: non
 .reel figure{margin:0;padding:2px;border-radius:18px;background:var(--iri);box-shadow:0 10px 26px rgba(0,0,0,.35)}
 .reel video{display:block;width:100%;aspect-ratio:372/464;object-fit:cover;border-radius:16px;background:var(--surface)}
 @media (min-width:700px){.reel{gap:20px}.reel figure{border-radius:22px}.reel video{border-radius:20px}}
+.hero-reel{width:100%;margin:18px 0 6px;gap:8px}
+@media (min-width:700px){.hero-reel{gap:14px}}
