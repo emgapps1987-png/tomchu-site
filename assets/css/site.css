@@ -901,9 +901,15 @@ html.light .brand img.lg-l { background: transparent; border: 0; box-shadow: non
 .hero-ink .ctas{justify-content:center}
 }
 .tom-c{width:min(100%,960px);margin:26px auto 34px}
-.tom-c .ph{border-radius:22px;padding:2px;background:var(--iri);box-shadow:0 12px 32px rgba(0,0,0,.35)}
-.tom-c img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;object-position:30% 35%;border-radius:20px}
-.tc-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;flex-wrap:nowrap}
-.tc-row h2{margin:0;font:800 clamp(.92rem,4.1vw,1.7rem)/1.2 var(--f-d);white-space:nowrap}
-.tc-row .btn{margin:0;flex:none;min-height:36px;padding:0 12px;font-size:clamp(.74rem,3.2vw,.95rem)}
-@media(min-width:900px){.tc-row{gap:22px;margin-top:20px}.tc-row .btn{min-height:44px;padding:0 18px}}
+.tom-c{position:relative;border-radius:22px;padding:2px;background:var(--iri);box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.tom-c .ph{border-radius:20px;overflow:hidden;position:relative}
+.tom-c .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(8,6,10,.55) 70%,rgba(8,6,10,.9) 100%);pointer-events:none}
+.tom-c img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;object-position:30% 30%}
+.tc-row{position:absolute;inset-inline:2px;bottom:2px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:16px 16px 16px;flex-wrap:nowrap}
+.tc-row h2{margin:0;font:800 clamp(1.05rem,4.8vw,2.1rem)/1.15 var(--f-d);color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.tc-row h2 .iri-text{display:block}
+.tc-row .btn{margin:0;flex:none;min-height:38px;padding:0 14px;font-size:clamp(.78rem,3.3vw,.95rem);color:#fff;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-color:rgba(255,255,255,.35)}
+@media(min-width:900px){.tom-c img{aspect-ratio:16/9}.tc-row{padding:30px 34px}.tc-row .btn{min-height:46px;padding:0 22px}}
+.tc-row h2 .iri-text{background:linear-gradient(120deg,#5FE3B8,#6FD0FF 35%,#A98CFF 65%,#FF7EB3);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 10px rgba(0,0,0,.6));text-shadow:none}
+.tom-c img{aspect-ratio:16/11;object-position:30% 28%}
+@media(min-width:900px){.tom-c img{aspect-ratio:21/9;object-position:30% 30%}}
