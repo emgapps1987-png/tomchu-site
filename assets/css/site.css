@@ -893,3 +893,10 @@ html.light .brand img.lg-l { background: transparent; border: 0; box-shadow: non
 .hero-reel{width:100%;margin:18px 0 6px;gap:8px}
 @media (min-width:700px){.hero-reel{gap:14px}}
 .hero-ink h1{font-size:clamp(1.9rem,8.4vw,3.6rem);white-space:nowrap}
+@media (min-width:900px){
+.hi-in{flex-direction:column;justify-content:flex-start;align-items:center;text-align:center;padding-block:28px 56px;min-height:0}
+.hi-orb{width:300px;height:300px;transform:none;margin:0 0 10px}
+.hi-text{align-items:center;width:100%}
+.hero-reel{width:min(100%,760px);margin:22px auto 8px}
+.hero-ink .ctas{justify-content:center}
+}
