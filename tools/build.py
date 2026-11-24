@@ -159,7 +159,7 @@ def footer(cur, R):
         <li><a href="{CFG["waze"]}" target="_blank" rel="noopener">{ic("nav")}ניווט ב־Waze<span class="sr"> (נפתח בחלון חדש)</span></a></li>
         <li><a href="{MOOVIT}" target="_blank" rel="noopener">{ic("pin")}תחבורה ציבורית ב־Moovit<span class="sr"> (נפתח בחלון חדש)</span></a></li></ul></div>
     </div>
-    <p class="seo-links">אזורים: <a href="{R}tattoo-alfei-menashe.html">אלפי מנשה</a> · <a href="{R}tattoo-kfar-saba.html">כפר סבא</a> · <a href="{R}tattoo-raanana.html">רעננה</a> · <a href="{R}tattoo-hod-hasharon.html">הוד השרון</a> · <a href="{R}tattoo-karnei-shomron.html">קרני שומרון</a> · <a href="{R}tattoo-tzur-yigal.html">צור יגאל</a><br>סגנונות: <a href="{R}fine-line-tattoo.html">פיין ליין</a> · <a href="{R}cover-up-tattoo.html">קאבר וחידוש</a> · <a href="{R}color-tattoo.html">צבע עדין</a></p>
+    <p class="seo-links">אזורים: <a href="{R}tattoo-alfei-menashe.html">אלפי מנשה</a> · <a href="{R}tattoo-kfar-saba.html">כפר סבא</a> · <a href="{R}tattoo-raanana.html">רעננה</a> · <a href="{R}tattoo-hod-hasharon.html">הוד השרון</a> · <a href="{R}tattoo-karnei-shomron.html">קרני שומרון</a> · <a href="{R}tattoo-tzur-yigal.html">צור יגאל</a> · <a href="{R}tattoo-tzofim.html">צופים</a><br>סגנונות: <a href="{R}fine-line-tattoo.html">פיין ליין</a> · <a href="{R}cover-up-tattoo.html">קאבר וחידוש</a> · <a href="{R}color-tattoo.html">צבע עדין</a></p>
     <div class="legal"><span>© <span data-year>{TODAY.year}</span> Tomchu Tattoo · תום גבע</span><span><a href="{R}accessibility.html">הצהרת נגישות</a> · <a href="{R}privacy.html">מדיניות פרטיות</a></span></div>
   </div>
 </footer>
@@ -835,6 +835,7 @@ CITIES = [
  ('tattoo-hod-hasharon', 'הוד השרון', 'נסיעה קצרה מהוד השרון'),
  ('tattoo-karnei-shomron', 'קרני שומרון', 'נסיעה קצרה מקרני שומרון'),
  ('tattoo-tzur-yigal', 'צור יגאל', 'נסיעה קצרה מצור יגאל'),
+ ('tattoo-tzofim', 'צופים', 'נסיעה קצרה מצופים'),
 ]
 STYLES = [
  ('fine-line-tattoo', 'קעקוע פיין ליין (Fine Line)', ['fine'], 'קווים דקים ומדויקים, פרטים קטנים ועדינים – הסגנון שתום הכי אוהבת לעבוד בו.',
