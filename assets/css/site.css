@@ -900,3 +900,10 @@ html.light .brand img.lg-l { background: transparent; border: 0; box-shadow: non
 .hero-reel{width:min(100%,760px);margin:22px auto 8px}
 .hero-ink .ctas{justify-content:center}
 }
+.tom-c{width:min(100%,960px);margin:26px auto 34px}
+.tom-c .ph{border-radius:22px;padding:2px;background:var(--iri);box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.tom-c img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;object-position:30% 35%;border-radius:20px}
+.tc-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;flex-wrap:nowrap}
+.tc-row h2{margin:0;font:800 clamp(.92rem,4.1vw,1.7rem)/1.2 var(--f-d);white-space:nowrap}
+.tc-row .btn{margin:0;flex:none;min-height:36px;padding:0 12px;font-size:clamp(.74rem,3.2vw,.95rem)}
+@media(min-width:900px){.tc-row{gap:22px;margin-top:20px}.tc-row .btn{min-height:44px;padding:0 18px}}
