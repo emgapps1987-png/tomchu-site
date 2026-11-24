@@ -913,3 +913,13 @@ html.light .brand img.lg-l { background: transparent; border: 0; box-shadow: non
 .tc-row h2 .iri-text{background:linear-gradient(120deg,#5FE3B8,#6FD0FF 35%,#A98CFF 65%,#FF7EB3);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 10px rgba(0,0,0,.6));text-shadow:none}
 .tom-c img{aspect-ratio:16/11;object-position:30% 28%}
 @media(min-width:900px){.tom-c img{aspect-ratio:21/9;object-position:30% 30%}}
+/* desktop symmetry */
+@media (min-width:900px){
+:root{--cw:1000px}
+.hero-reel,.promo-card,.tom-c,.motto{width:min(100%,var(--cw))!important;margin-inline:auto!important}
+.tiles{max-width:var(--cw);margin-inline:auto}
+.tile.big{grid-row:auto;min-height:190px}
+.tile{min-height:190px}
+}
+@media (min-width:900px){main .wrap{max-width:calc(var(--cw) + 2*max(var(--gut),20px))}.tiles{max-width:none}}
+@media (min-width:900px){.hero-ink .ctas{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:min(100%,560px);margin-inline:auto}.hero-ink .ctas .btn{width:100%;justify-content:center}}
