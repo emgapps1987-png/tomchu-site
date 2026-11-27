@@ -26,7 +26,7 @@
 <link rel="preload" href="assets/fonts/Heebo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Rubik.woff2" as="font" type="font/woff2" crossorigin>
 <style>@font-face{font-family:"Heebo";src:url(assets/fonts/Heebo.woff2) format("woff2");font-weight:100 900;font-display:swap}@font-face{font-family:"Rubik";src:url(assets/fonts/Rubik.woff2) format("woff2");font-weight:300 900;font-display:swap}@font-face{font-family:"Amatic SC";src:url(assets/fonts/Amatic-Bold.woff2) format("woff2");font-weight:700;font-display:swap}</style>
-<link rel="stylesheet" href="assets/css/site.css?v=202611271259">
+<link rel="stylesheet" href="assets/css/site.css?v=202611271306">
 <script>(function(){var r=document.documentElement;try{if(JSON.parse(localStorage.getItem('tt-theme'))==='light')r.classList.add('light');(JSON.parse(localStorage.getItem('tt-a11y'))||[]).forEach(function(c){r.classList.add(c)})}catch(e){}})();</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "בית", "item": "https://www.tomchu-tattoo.co.il/"}, {"@type": "ListItem", "position": 2, "name": "יומן החלמה"}]}</script>
 </head><body>
@@ -80,9 +80,22 @@ function journal(j){
  h+='<div class="hj-card"><div class="hj-th"><strong>המשימות של היום</strong><span id="hj-count">'+done.length+' מתוך '+T.length+'</span></div>'+T.map(function(t,k){return '<button type="button" class="hj-task" data-t="'+k+'" aria-pressed="'+(done.indexOf(k)>-1)+'"><span class="ck" aria-hidden="true"></span><span><strong>'+t[0]+'</strong><small>'+t[1]+'</small></span></button>'}).join('')+'</div>';
  h+='<div class="hj-card"><strong>איך הקעקוע מרגיש היום?</strong><div class="hj-feel">'+[['good','😊','מעולה'],['itch','😐','מגרד'],['odd','😟','משהו מוזר']].map(function(f){return '<button type="button" data-f="'+f[0]+'" aria-pressed="'+(feel===f[0])+'"><span aria-hidden="true">'+f[1]+'</span>'+f[2]+'</button>'}).join('')+'</div><div id="hj-fo">'+(feel==='odd'?odd():FEEL[feel]?'<p class="muted">'+FEEL[feel]+'</p>':'')+'</div></div>';
  h+='<div class="hj-card"><strong>הדרך שלך</strong>'+CARE.steps.map(function(s,k){return '<div class="hj-step'+(k<ph?' past':k===ph?' here':'')+'"><span class="dot" aria-hidden="true">'+(k<ph?'✓':'')+'</span><span><span class="when">'+esc(s.when)+(k===ph?' · את/ה כאן':'')+'</span><span class="t">'+esc(s.title)+'</span></span></div>'}).join('')+'</div>';
- if(i<=29)h+='<div class="hj-card"><strong>תזכורות ביומן של הטלפון</strong><p class="muted">'+(i<=14?'מוסיפים ליומן (Apple / Google) תזכורות לשטיפה ומשחה – בוקר, צהריים וערב עד סוף השבועיים הראשונים, ותזכורת ליום שבו הקעקוע מחלים.':'מוסיפים ליומן (Apple / Google) תזכורת ליום שבו הקעקוע מחלים.')+'</p><a class="btn btn-ghost" href="'+EP+'?action=ics&start='+j.start+'" target="_blank" rel="noopener">להוסיף תזכורות ליומן</a><p class="hj-priv">באייפון: בחלון שנפתח לוחצים "הוסף הכול". במחשב ובאנדרואיד: פותחים את הקובץ שירד.</p></div>';
+ if(i<=29)h+='<div class="hj-card"><strong>תזכורות ביומן של הטלפון</strong><p class="muted">'+(i<=14?'מוסיפים ליומן (Apple / Google) תזכורות לשטיפה ומשחה – בוקר, צהריים וערב עד סוף השבועיים הראשונים, ותזכורת ליום שבו הקעקוע מחלים.':'מוסיפים ליומן (Apple / Google) תזכורת ליום שבו הקעקוע מחלים.')+'</p><a class="btn btn-ghost" id="hj-ics" href="#">להוסיף תזכורות ליומן</a><p class="hj-priv">באייפון: בחלון שנפתח לוחצים "הוסף הכול". במחשב ובאנדרואיד: פותחים את הקובץ שירד.</p></div>';
  h+='<p class="hj-foot">התחלתם ב־'+fmt(j.start)+' · <button type="button" class="hj-link" id="hj-reset">איפוס היומן</button></p>';
  return h}
+
+function icsFile(start){
+ var day=864e5,s0=Date.parse(start+'T12:00:00Z'),td=Date.parse(today+'T12:00:00Z');
+ function ymd(t){return new Date(t).toISOString().slice(0,10).replace(/-/g,'')}
+ var n=new Date(),p=function(x){return(x<10?'0':'')+x},stamp=n.getUTCFullYear()+p(n.getUTCMonth()+1)+p(n.getUTCDate())+'T'+p(n.getUTCHours())+p(n.getUTCMinutes())+p(n.getUTCSeconds())+'Z';
+ function e(x){return String(x).replace(/\\/g,'\\\\').replace(/,/g,'\\,').replace(/;/g,'\;').replace(/\n/g,'\\n')}
+ var out=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Tomchu Tattoo//Care//HE','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Tomchu Tattoo – החלמה'];
+ function ev(uid,t,hh,title,desc,count){out.push('BEGIN:VEVENT','UID:'+uid+'-'+start+'@tomchutattoo','DTSTAMP:'+stamp,'DTSTART:'+ymd(t)+'T'+hh+'0000','DURATION:PT10M');if(count>1)out.push('RRULE:FREQ=DAILY;COUNT='+count);out.push('SUMMARY:'+e(title),'DESCRIPTION:'+e(desc),'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+e(title),'TRIGGER:PT0M','END:VALARM','END:VEVENT')}
+ var first=Math.max(s0,td),left=15-Math.round((first-s0)/day);
+ if(left>0){ev('wash-am',first,'09','קעקוע: שטיפה + משחה 🫧 (בוקר)','מים פושרים, סבון עדין, ייבוש בטפיחות ושכבה דקה של משחה.',left);ev('wash-noon',first,'14','קעקוע: שטיפה + משחה 🫧 (צהריים)','שכבה דקה של משחה, וזהו.',left);ev('wash-pm',first,'20','קעקוע: שטיפה + משחה 🫧 (ערב)','מים פושרים, ייבוש בטפיחות ומשחה. ולא לגרד 😉',left)}
+ if(s0+15*day>=td)ev('two-weeks',s0+15*day,'10','שבועיים לקעקוע ✨','מהיום אפשר לעבור לקרם לחות. עוד שבועיים בלי שמש ובריכה.',1);
+ if(s0+30*day>=td)ev('healed',s0+30*day,'10','הקעקוע החלים! 🏅','מעכשיו רק קרם הגנה SPF 50 בשמש. מוזמנים לשלוח לתום תמונה של התוצאה.',1);
+ out.push('END:VCALENDAR');return out.join('\r\n')}
 function render(){var j=load();root.innerHTML=j?journal(j):start();bind(j)}
 function bind(j){
  var q=function(s){return root.querySelectorAll(s)};
@@ -91,6 +104,7 @@ function bind(j){
   document.getElementById('hj-go').onclick=function(){var v=inp.value;if(!v||v>today)return;save({start:v});render();window.scrollTo({top:root.offsetTop-90})};return}
  q('.hj-task').forEach(function(b){b.onclick=function(){var c=load();if(!c)return;var k=+b.dataset.t,set=(c.done&&c.done[today])||[],x=set.indexOf(k);if(x>-1)set.splice(x,1);else set.push(k);c.done={};c.done[today]=set;save(c);b.setAttribute('aria-pressed',String(x<0));document.getElementById('hj-count').textContent=set.length+' מתוך '+q('.hj-task').length}});
  q('.hj-feel button').forEach(function(b){b.onclick=function(){var c=load();if(!c)return;var v=b.dataset.f;c.feel={};c.feel[today]=v;save(c);q('.hj-feel button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});document.getElementById('hj-fo').innerHTML=v==='odd'?odd():'<p class="muted">'+FEEL[v]+'</p>'}});
+ var ic=document.getElementById('hj-ics');if(ic)ic.onclick=function(ev){ev.preventDefault();var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([icsFile(j.start)],{type:'text/calendar;charset=utf-8'}));a.download='tomchu-tattoo-care.ics';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},2000)};
  var r=document.getElementById('hj-reset');if(r)r.onclick=function(){if(r.dataset.sure!=='1'){r.dataset.sure='1';r.textContent='בטוח? לחיצה נוספת מוחקת את היומן';return}save(null);render()};
 }
 render();
@@ -132,7 +146,7 @@ render();
   </div>
   <a href="accessibility.html">להצהרת הנגישות</a>
 </div>
-<script src="assets/js/site.js?v=202611271259" defer></script>
+<script src="assets/js/site.js?v=202611271306" defer></script>
 <script>if(/(^|\.)tomchu-tattoo\.co\.il$/.test(location.hostname)){var s=document.createElement('script');s.defer=1;s.src='https://static.cloudflareinsights.com/beacon.min.js';s.setAttribute('data-cf-beacon','{"token": "618c5c9de5fb46e09ffd3922cdc57781"}');document.body.appendChild(s)}</script>
 </body>
 </html>
