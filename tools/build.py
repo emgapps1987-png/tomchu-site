@@ -111,7 +111,7 @@ def head(title, desc, path, R, og_img='assets/img/og.jpg', ld=None, robots='inde
 
 def header(cur, R):
     items = ''.join(f'<li><a href="{R}{h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}>{t}</a></li>' for h, t, _ in NAV)
-    ditems = ''.join(f'<li><a href="{h if h.startswith("http") else R + h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}><span>{t}</span></a></li>' for h, t in [('index.html', 'בית'), ('works.html', 'עבודות'), ('guide.html', 'איזה קעקוע מתאים לי?'), ('tom.html', 'תום והסטודיו'), ('process.html', 'לפני שמגיעים'), ('process.html#care', 'טיפול בקעקוע חדש'), ('health.html', 'הצהרת בריאות'), ('gift.html', 'שובר מתנה'), ('app.html', 'האפליקציה')])
+    ditems = ''.join(f'<li><a href="{h if h.startswith("http") else R + h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == cur else ""}><span>{t}</span></a></li>' for h, t in [('index.html', 'בית'), ('works.html', 'עבודות'), ('guide.html', 'איזה קעקוע מתאים לי?'), ('tom.html', 'תום והסטודיו'), ('process.html', 'לפני שמגיעים'), ('process.html#care', 'טיפול בקעקוע חדש'), ('healing.html', 'יומן החלמה'), ('health.html', 'הצהרת בריאות'), ('gift.html', 'שובר מתנה'), ('app.html', 'האפליקציה')])
     API, WA = CFG.get('healthEndpoint', ''), CFG['whatsapp']
     return f'''<body>
 <a class="skip" href="#main">דילוג לתוכן הראשי</a>
@@ -361,6 +361,11 @@ home = f'''
       <div class="ctas hi-rv" style="--d:2.9s"><a class="btn btn-iri" href="{{R}}contact.html">{ic("chat")}לקביעת שיחת ייעוץ</a><a class="btn btn-ghost" href="{{R}}guide.html">{ic("spark")}איזה קעקוע מתאים לי?</a></div>
     </div>
   </div>
+  <div class="wrap"><div class="heal-cta rise"><div class="in">
+   <div class="ic" aria-hidden="true"><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/><path d="M9 11.5l2 2 4-4"/></svg></div></div>
+   <div><span class="k">קעקעת לאחרונה?</span><h2>טיפול בקעקוע חדש</h2><p>יומן החלמה יום־אחר־יום: מה לעשות היום, תזכורות לשטיפה ומשחה, ומתי לפנות לתום.</p></div>
+   <div class="bt"><a class="btn btn-iri" href="healing.html">ליומן ההחלמה</a><a class="btn btn-ghost" href="process.html#care">הוראות הטיפול</a></div>
+  </div></div></div>
   <div class="wrap"><div id="promo-card" class="promo-card" hidden></div></div>
   <div class="wrap"><div class="tom-c hi-rv" style="--d:3s"><div class="ph"><img src="assets/img/tom-studio-1400.webp" srcset="assets/img/tom-studio-700.webp 700w, assets/img/tom-studio-1400.webp 1400w" sizes="(max-width:960px) 100vw, 960px" width="1400" height="788" alt="תום מקעקעת לקוחה בסטודיו שלה באלפי מנשה"></div><div class="tc-row"><h2>אמנית, אמא, <span class="iri-text">ומקעקעת עם נשמה</span></h2><a class="btn btn-ghost" href="tom.html">הסיפור של תום</a></div></div></div>
   <div class="wrap"><div class="motto" id="motto"><p><span class="w" style="--i:0">״אצלי</span> <span class="w" style="--i:1">אין</span> <span class="w" style="--i:2">חוקים</span><br><span class="w" style="--i:3">רק</span> <span class="w" style="--i:4">חלומות</span> <span class="w" style="--i:5">שמתגשמים.״</span></p><span class="sig">תום גבע</span></div></div>
@@ -532,7 +537,7 @@ process = phead('לפני <span class="iri-text">שמגיעים</span>', 'מהר
       <div class="card"><h3>לא</h3><ul class="prose" style="padding-inline-start:20px;margin:0;color:var(--muted)">{"".join(f"<li>{e(x)}</li>" for x in care["donts"])}</ul></div>
     </div>
     <p class="card" style="margin-top:16px;border-color:var(--acc2)"><b>חשוב:</b> {e(care["warning"])}</p>
-    <div class="ctas" style="margin-top:20px">{ext(APP + "#/care", "יומן ההחלמה באפליקציה", "btn btn-iri", "care")}</div>
+    <div class="ctas" style="margin-top:20px"><a class="btn btn-iri" href="healing.html">ליומן ההחלמה</a>{ext(APP + "#/care", "יומן ההחלמה באפליקציה", "btn btn-ghost", "care")}</div>
   </div>
 </section>
 <section id="faq" aria-labelledby="faq-h" style="padding-top:0"><div class="wrap"><div class="sec-head"><h2 id="faq-h">שאלות <span class="iri-text">ותשובות</span></h2></div></div><div class="wrap split" style="align-items:start">
@@ -819,6 +824,13 @@ for old, new in OLD.items():
     d = os.path.join(ROOT, old); os.makedirs(d, exist_ok=True)
     up = '../' * (old.count('/') + 1); tgt = up + new; full = SITE + '/' + new
     open(os.path.join(d, 'index.html'), 'w', encoding='utf-8').write(f'<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>Tomchu Tattoo</title><meta name="robots" content="noindex"><link rel="canonical" href="{full}"><meta http-equiv="refresh" content="0; url={tgt}"><script>location.replace({json.dumps(tgt)})</script></head><body><p>העמוד עבר: <a href="{tgt}">להמשך</a></p></body></html>')
+
+# ================================================================ healing journal (mirrors the app's care journal)
+_care = json.dumps({'steps': C['CARE']['steps'], 'warning': C['CARE']['warning']}, ensure_ascii=False)
+_hjs = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'heal.js'), encoding='utf-8').read().replace('__CARE__', _care).replace('__WA__', WA).replace('__EP__', 'https://script.google.com/macros/s/AKfycbx8Fdjy-R1BFsbZRwoc3WbTqR8FzpORe76ot9fpKa5OLgF-ReHm8WbvalKR26HcqtckBw/exec')
+heal_cr = [('index.html', 'בית'), (None, 'יומן החלמה')]
+heal = phead('יומן <span class="iri-text">החלמה</span>', 'מלווים אתכם יום־יום עד שהעור מחלים – בדיוק כמו ביומן שבאפליקציה.', heal_cr, '') + '<section style="padding-top:0"><div class="wrap hj" id="hj" aria-live="polite"></div></section><script>' + _hjs + '</script>'
+page('healing.html', 'יומן החלמה לקעקוע חדש – מעקב יומי | Tomchu Tattoo', 'יומן החלמה אישי לקעקוע חדש: באיזה שלב העור נמצא, מה לעשות היום, תזכורות ביומן ומתי לפנות. נשמר רק במכשיר שלך.', heal, ld=[crumbs_ld(heal_cr)])
 
 # ================================================================ SEO landing pages
 def _gal(tags, n=6):
