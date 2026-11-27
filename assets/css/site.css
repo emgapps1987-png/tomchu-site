@@ -970,3 +970,7 @@ html.light .brand img.lg-l { background: transparent; border: 0; box-shadow: non
 @media(min-width:900px){.heal-cta .in{grid-template-columns:auto 1fr auto;padding:26px 30px}.heal-cta .bt{grid-column:auto;grid-template-columns:1fr;min-width:230px}}
 .heal-cta .k{display:inline-block;background:linear-gradient(270deg,#5FE3B8,#6FD0FF 40%,#A98CFF 70%,#FF7EB3);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:.85rem}
 html.light .heal-cta .k{background:linear-gradient(270deg,#0F8A66,#2A5FC4 45%,#7A36B3 75%,#C82464);-webkit-background-clip:text;background-clip:text}
+.hj-gcal{display:grid;gap:8px}
+.hj-gbtn{display:flex;justify-content:space-between;align-items:center;min-height:52px;padding:0 16px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-decoration:none;font-weight:600}
+.hj-gbtn b{font-size:.85rem;background:var(--iri);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hj-gbtn:active{transform:scale(.99)}

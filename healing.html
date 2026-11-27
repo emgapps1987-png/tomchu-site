@@ -26,7 +26,7 @@
 <link rel="preload" href="assets/fonts/Heebo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Rubik.woff2" as="font" type="font/woff2" crossorigin>
 <style>@font-face{font-family:"Heebo";src:url(assets/fonts/Heebo.woff2) format("woff2");font-weight:100 900;font-display:swap}@font-face{font-family:"Rubik";src:url(assets/fonts/Rubik.woff2) format("woff2");font-weight:300 900;font-display:swap}@font-face{font-family:"Amatic SC";src:url(assets/fonts/Amatic-Bold.woff2) format("woff2");font-weight:700;font-display:swap}</style>
-<link rel="stylesheet" href="assets/css/site.css?v=202611271306">
+<link rel="stylesheet" href="assets/css/site.css?v=202611271310">
 <script>(function(){var r=document.documentElement;try{if(JSON.parse(localStorage.getItem('tt-theme'))==='light')r.classList.add('light');(JSON.parse(localStorage.getItem('tt-a11y'))||[]).forEach(function(c){r.classList.add(c)})}catch(e){}})();</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "בית", "item": "https://www.tomchu-tattoo.co.il/"}, {"@type": "ListItem", "position": 2, "name": "יומן החלמה"}]}</script>
 </head><body>
@@ -80,7 +80,7 @@ function journal(j){
  h+='<div class="hj-card"><div class="hj-th"><strong>המשימות של היום</strong><span id="hj-count">'+done.length+' מתוך '+T.length+'</span></div>'+T.map(function(t,k){return '<button type="button" class="hj-task" data-t="'+k+'" aria-pressed="'+(done.indexOf(k)>-1)+'"><span class="ck" aria-hidden="true"></span><span><strong>'+t[0]+'</strong><small>'+t[1]+'</small></span></button>'}).join('')+'</div>';
  h+='<div class="hj-card"><strong>איך הקעקוע מרגיש היום?</strong><div class="hj-feel">'+[['good','😊','מעולה'],['itch','😐','מגרד'],['odd','😟','משהו מוזר']].map(function(f){return '<button type="button" data-f="'+f[0]+'" aria-pressed="'+(feel===f[0])+'"><span aria-hidden="true">'+f[1]+'</span>'+f[2]+'</button>'}).join('')+'</div><div id="hj-fo">'+(feel==='odd'?odd():FEEL[feel]?'<p class="muted">'+FEEL[feel]+'</p>':'')+'</div></div>';
  h+='<div class="hj-card"><strong>הדרך שלך</strong>'+CARE.steps.map(function(s,k){return '<div class="hj-step'+(k<ph?' past':k===ph?' here':'')+'"><span class="dot" aria-hidden="true">'+(k<ph?'✓':'')+'</span><span><span class="when">'+esc(s.when)+(k===ph?' · את/ה כאן':'')+'</span><span class="t">'+esc(s.title)+'</span></span></div>'}).join('')+'</div>';
- if(i<=29)h+='<div class="hj-card"><strong>תזכורות ביומן של הטלפון</strong><p class="muted">'+(i<=14?'מוסיפים ליומן (Apple / Google) תזכורות לשטיפה ומשחה – בוקר, צהריים וערב עד סוף השבועיים הראשונים, ותזכורת ליום שבו הקעקוע מחלים.':'מוסיפים ליומן (Apple / Google) תזכורת ליום שבו הקעקוע מחלים.')+'</p><a class="btn btn-ghost" id="hj-ics" href="#">להוסיף תזכורות ליומן</a><p class="hj-priv">באייפון: בחלון שנפתח לוחצים "הוסף הכול". במחשב ובאנדרואיד: פותחים את הקובץ שירד.</p></div>';
+ if(i<=29)h+='<div class="hj-card"><strong>'+(MOBILE?'תזכורות ביומן של הטלפון':'תזכורות ב־Google Calendar')+'</strong><p class="muted">'+(i<=14?'מוסיפים ליומן (Apple / Google) תזכורות לשטיפה ומשחה – בוקר, צהריים וערב עד סוף השבועיים הראשונים, ותזכורת ליום שבו הקעקוע מחלים.':'מוסיפים ליומן (Apple / Google) תזכורת ליום שבו הקעקוע מחלים.')+'</p><div id="hj-calbox">'+calButtons(j.start,i)+'</div></div>';
  h+='<p class="hj-foot">התחלתם ב־'+fmt(j.start)+' · <button type="button" class="hj-link" id="hj-reset">איפוס היומן</button></p>';
  return h}
 
@@ -96,6 +96,19 @@ function icsFile(start){
  if(s0+15*day>=td)ev('two-weeks',s0+15*day,'10','שבועיים לקעקוע ✨','מהיום אפשר לעבור לקרם לחות. עוד שבועיים בלי שמש ובריכה.',1);
  if(s0+30*day>=td)ev('healed',s0+30*day,'10','הקעקוע החלים! 🏅','מעכשיו רק קרם הגנה SPF 50 בשמש. מוזמנים לשלוח לתום תמונה של התוצאה.',1);
  out.push('END:VCALENDAR');return out.join('\r\n')}
+
+var MOBILE=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||/Android|iP(hone|ad|od)/.test(navigator.userAgent);
+function gcal(title,details,ymd,hh,count){var d=ymd+'T'+hh+'0000',e=ymd+'T'+hh+'1000';return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(title)+'&details='+encodeURIComponent(details)+'&dates='+d+'/'+e+'&ctz=Asia/Jerusalem'+(count>1?'&recur='+encodeURIComponent('RRULE:FREQ=DAILY;COUNT='+count):'')}
+function calButtons(start,i){
+ if(MOBILE)return '<a class="btn btn-iri" id="hj-ics" href="#">הוספת כל התזכורות ליומן 📅</a><p class="hj-priv">באייפון לוחצים "הוסף הכול". באנדרואיד פותחים עם אפליקציית היומן.</p>';
+ var day=864e5,s0=Date.parse(start+'T12:00:00Z'),td=Date.parse(today+'T12:00:00Z'),first=Math.max(s0,td),left=15-Math.round((first-s0)/day);
+ function ymd(t){return new Date(t).toISOString().slice(0,10).replace(/-/g,'')}
+ var L=[];
+ if(left>0){L.push(['☀️ בוקר · 9:00',gcal('קעקוע: שטיפה + משחה 🫧 (בוקר)','מים פושרים, סבון עדין, ייבוש בטפיחות ושכבה דקה של משחה.',ymd(first),'09',left)]);
+  L.push(['🌤️ צהריים · 14:00',gcal('קעקוע: שטיפה + משחה 🫧 (צהריים)','שכבה דקה של משחה, וזהו.',ymd(first),'14',left)]);
+  L.push(['🌙 ערב · 20:00',gcal('קעקוע: שטיפה + משחה 🫧 (ערב)','מים פושרים, ייבוש בטפיחות ומשחה. ולא לגרד 😉',ymd(first),'20',left)])}
+ if(s0+30*day>=td)L.push(['🏅 היום שהקעקוע מחלים',gcal('הקעקוע החלים! 🏅','מעכשיו רק קרם הגנה SPF 50 בשמש. מוזמנים לשלוח לתום תמונה של התוצאה.',ymd(s0+30*day),'10',1)]);
+ return '<div class="hj-gcal">'+L.map(function(x){return '<a class="hj-gbtn" href="'+x[1]+'" target="_blank" rel="noopener"><span>'+x[0]+'</span><b>הוספה ›</b></a>'}).join('')+'</div><p class="hj-priv">כל לחיצה פותחת את Google Calendar עם התזכורת מוכנה, ורק לוחצים "שמירה". <a href="#" id="hj-ics" class="hj-link">יומן אחר? הורדת קובץ</a></p>'}
 function render(){var j=load();root.innerHTML=j?journal(j):start();bind(j)}
 function bind(j){
  var q=function(s){return root.querySelectorAll(s)};
@@ -146,7 +159,7 @@ render();
   </div>
   <a href="accessibility.html">להצהרת הנגישות</a>
 </div>
-<script src="assets/js/site.js?v=202611271306" defer></script>
+<script src="assets/js/site.js?v=202611271310" defer></script>
 <script>if(/(^|\.)tomchu-tattoo\.co\.il$/.test(location.hostname)){var s=document.createElement('script');s.defer=1;s.src='https://static.cloudflareinsights.com/beacon.min.js';s.setAttribute('data-cf-beacon','{"token": "618c5c9de5fb46e09ffd3922cdc57781"}');document.body.appendChild(s)}</script>
 </body>
 </html>
