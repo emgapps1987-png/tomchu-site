@@ -101,9 +101,9 @@ def head(title, desc, path, R, og_img='assets/img/og.jpg', ld=None, robots='inde
 <link rel="icon" type="image/png" sizes="48x48" href="{R}assets/img/favicon-48.png">
 <link rel="apple-touch-icon" href="{R}assets/img/apple-touch-icon.png">
 <link rel="manifest" href="{R}site.webmanifest">
-<link rel="preload" href="{R}assets/fonts/Heebo.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{R}assets/fonts/Rubik.woff2" as="font" type="font/woff2" crossorigin>
-<style>@font-face{{font-family:"Heebo";src:url({R}assets/fonts/Heebo.woff2) format("woff2");font-weight:100 900;font-display:swap}}@font-face{{font-family:"Rubik";src:url({R}assets/fonts/Rubik.woff2) format("woff2");font-weight:300 900;font-display:swap}}@font-face{{font-family:"Amatic SC";src:url({R}assets/fonts/Amatic-Bold.woff2) format("woff2");font-weight:700;font-display:swap}}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Heebo:wght@400;500;600;700&family=Rubik:wght@500;700;800&display=swap">
 <link rel="stylesheet" href="{R}assets/css/site.css?v={VER}">
 <script>(function(){{var r=document.documentElement;try{{if(JSON.parse(localStorage.getItem('tt-theme'))==='light')r.classList.add('light');(JSON.parse(localStorage.getItem('tt-a11y'))||[]).forEach(function(c){{r.classList.add(c)}})}}catch(e){{}}}})();</script>
 {lds}
