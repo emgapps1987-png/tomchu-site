@@ -923,3 +923,8 @@ html.light .brand img.lg-l { background: transparent; border: 0; box-shadow: non
 }
 @media (min-width:900px){main .wrap{max-width:calc(var(--cw) + 2*max(var(--gut),20px))}.tiles{max-width:none}}
 @media (min-width:900px){.hero-ink .ctas{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:min(100%,560px);margin-inline:auto}.hero-ink .ctas .btn{width:100%;justify-content:center}}
+/* faster intro: text appears with the logo, not after it */
+.hi-eye,.hi-rv{animation-delay:calc(var(--d,1.6s)*.3)!important}
+.hi-w{animation-delay:calc(var(--d)*.3)!important;animation-duration:.7s!important}
+.seo-links{opacity:.8}
+@media (prefers-reduced-motion:no-preference){.iri-flow{animation-duration:.7s,7s!important;animation-delay:calc(var(--d)*.3),0s!important}}

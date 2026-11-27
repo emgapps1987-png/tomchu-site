@@ -119,7 +119,7 @@ def header(cur, R):
 <header class="hdr">
   <div class="wrap">
     <button type="button" class="menu-btn" data-menu aria-expanded="false" aria-controls="drawer">{ic("menu")}<span>תפריט</span></button>
-    <a class="brand" href="{R}index.html"><img class="lg-d" src="{R}assets/img/logo-96.png" width="44" height="44" alt=""><img class="lg-l" src="{R}assets/img/logo-light-96.png" width="44" height="44" alt=""><span>Tomchu Tattoo</span><span class="sr"> – לעמוד הבית</span></a>
+    <a class="brand" href="{R}index.html" aria-label="Tomchu Tattoo – דף הבית"><img class="lg-d" src="{R}assets/img/logo-96.png" width="44" height="44" alt=""><img class="lg-l" src="{R}assets/img/logo-light-96.png" width="44" height="44" alt=""><span>Tomchu Tattoo</span><span class="sr"> – לעמוד הבית</span></a>
     <nav class="mainnav" aria-label="ניווט ראשי"><ul>{items}</ul></nav>
     <div class="hdr-act">
       <button type="button" class="icon-btn theme-btn" aria-pressed="false" aria-label="מעבר לתצוגה בהירה">{ic("moon", "moon")}{ic("sun", "sun")}</button>
@@ -144,7 +144,7 @@ def footer(cur, R):
 <footer class="ftr">
   <div class="wrap">
     <div class="cols">
-      <div><a class="brand" href="{R}index.html"><img class="lg-d" src="{R}assets/img/logo-96.png" width="44" height="44" alt=""><img class="lg-l" src="{R}assets/img/logo-light-96.png" width="44" height="44" alt=""><span>Tomchu Tattoo</span></a>
+      <div><a class="brand" href="{R}index.html" aria-label="Tomchu Tattoo – דף הבית"><img class="lg-d" src="{R}assets/img/logo-96.png" width="44" height="44" alt=""><img class="lg-l" src="{R}assets/img/logo-light-96.png" width="44" height="44" alt=""><span>Tomchu Tattoo</span></a>
         <p>סטודיו פרטי לקעקועים של תום גבע.<br>Fine Line, ריאליזם וקאברים.<br>{CFG["address"]} · בתיאום מראש</p></div>
       <div><h2>דברו עם תום</h2><ul>
         <li><a class="soc-pill" href="{WA}" target="_blank" rel="noopener">{ic("wa")}וואטסאפ<span class="sr"> (נפתח בחלון חדש)</span></a></li>
@@ -357,7 +357,7 @@ home = f'''
       <span class="hi-eye">סטודיו פרטי לקעקועים · אלפי מנשה</span>
       <h1 id="hero-h"><span class="hi-w" style="--d:1.75s">הכל</span> <span class="hi-w" style="--d:1.95s">מתחיל</span> <span class="hi-w iri-flow" style="--d:2.15s">בקעקוע</span></h1>
       <p class="lead hi-rv" style="--d:2.5s">Fine Line, ריאליזם וקאברים.</p>
-      <div class="reel hero-reel hi-rv" style="--d:2.6s" aria-label="תום מקעקעת בסטודיו – סרטונים קצרים"><figure><video class="reel-v" muted loop playsinline preload="none" poster="{{R}}assets/video/reel-A.jpg"><source src="{{R}}assets/video/reel-A.mp4" type="video/mp4"></video></figure><figure><video class="reel-v" muted loop playsinline preload="none" poster="{{R}}assets/video/reel-B.jpg"><source src="{{R}}assets/video/reel-B.mp4" type="video/mp4"></video></figure><figure><video class="reel-v" muted loop playsinline preload="none" poster="{{R}}assets/video/reel-C.jpg"><source src="{{R}}assets/video/reel-C.mp4" type="video/mp4"></video></figure></div>
+      <div role="group" class="reel hero-reel hi-rv" style="--d:2.6s" aria-label="תום מקעקעת בסטודיו – סרטונים קצרים"><figure><video class="reel-v" muted loop playsinline preload="none" poster="{{R}}assets/video/reel-A.jpg"><source src="{{R}}assets/video/reel-A.mp4" type="video/mp4"></video></figure><figure><video class="reel-v" muted loop playsinline preload="none" poster="{{R}}assets/video/reel-B.jpg"><source src="{{R}}assets/video/reel-B.mp4" type="video/mp4"></video></figure><figure><video class="reel-v" muted loop playsinline preload="none" poster="{{R}}assets/video/reel-C.jpg"><source src="{{R}}assets/video/reel-C.mp4" type="video/mp4"></video></figure></div>
       <div class="ctas hi-rv" style="--d:2.9s"><a class="btn btn-iri" href="{{R}}contact.html">{ic("chat")}לקביעת שיחת ייעוץ</a><a class="btn btn-ghost" href="{{R}}guide.html">{ic("spark")}איזה קעקוע מתאים לי?</a></div>
     </div>
   </div>
