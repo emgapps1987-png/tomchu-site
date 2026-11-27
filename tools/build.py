@@ -198,7 +198,7 @@ def phead(title_html, lead, cr, R, label=None):
 BUSINESS = {
     "@context": "https://schema.org", "@type": "TattooParlor", "@id": SITE + "/#studio", "name": "Tomchu Tattoo – תום גבע",
     "alternateName": "טומצ'ו טאטו", "url": SITE + "/", "image": SITE + "/assets/img/og.jpg", "logo": SITE + "/assets/img/icon-512.png",
-    "telephone": "+972-54-288-5771", "email": CFG['email'], "priceRange": "₪₪",
+    "telephone": "+972-54-288-5771", "email": CFG['email'], "priceRange": "₪₪", "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "10:00", "closes": "22:00"}],
     "description": "סטודיו פרטי לקעקועים באלפי מנשה: Fine Line, ריאליזם וקאברים. עיצוב אישי, ציוד חד־פעמי ואווירה רגועה.",
     "address": {"@type": "PostalAddress", "streetAddress": "קדרון 48", "addressLocality": "אלפי מנשה", "addressCountry": "IL"},
     "geo": {"@type": "GeoCoordinates", "latitude": 32.1801435, "longitude": 35.0132961},
