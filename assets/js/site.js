@@ -2,7 +2,7 @@
 const TT_FAKE = (v) => { const d = String(v || '').replace(/\D/g, '').replace(/^972/, '0'); return /(\d)\1{5,}/.test(d) || /1234567|2345678|3456789|9876543|0123456/.test(d) || /^(\d)\1*$/.test(d.slice(3)); };
 const TT_T0 = Date.now();
 document.addEventListener('DOMContentLoaded', () => { try { ttGuard(); } catch (e) {} });
-const ttGuard = () => { let hp = document.getElementById('tt-hp'); if (!hp) { const w = document.createElement('div'); w.setAttribute('aria-hidden', 'true'); w.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden'; w.innerHTML = '<label for="tt-hp">אל תמלאו</label><input id="tt-hp" name="website" type="text" tabindex="-1" autocomplete="off">'; document.body.appendChild(w); hp = w.querySelector('input'); } return { hp: hp.value, ms: Date.now() - TT_T0 }; };
+const ttGuard = () => { let hp = document.getElementById('tt-hp'); if (!hp) { const w = document.createElement('div'); w.setAttribute('aria-hidden', 'true'); w.style.cssText = 'position:fixed;top:0;right:0;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);opacity:0;pointer-events:none'; w.innerHTML = '<label for="tt-hp">אל תמלאו</label><input id="tt-hp" name="website" type="text" tabindex="-1" autocomplete="off">'; document.body.appendChild(w); hp = w.querySelector('input'); } return { hp: hp.value, ms: Date.now() - TT_T0 }; };
 /* Tomchu Tattoo – site behaviour. Vanilla, no dependencies. */
 (() => {
   const d = document, root = d.documentElement;
