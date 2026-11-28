@@ -193,7 +193,9 @@
   /* ---------- contact: WhatsApp message builder ---------- */
   const cf = $('#wa-form');
   if (cf) {
-    const pv = $('#wa-preview');
+    const pv = $('#wa-preview'), qs = new URLSearchParams(location.search);
+    const PROMO = (qs.get('promo') || '').slice(0, 60).replace(/[<>]/g, ''), PTEL = (qs.get('tel') || '').replace(/\D/g, '').slice(0, 10);
+    if (PROMO) cf.insertAdjacentHTML('afterbegin', `<div class="promo-chip">🎁 <span>${PROMO.replace(/&/g, '&amp;')}<br><small class="muted">ההטבה תצורף להודעה לתום · בתוקף עד 31.12</small></span></div>`);
     const build = () => {
       const f = new FormData(cf), L = [];
       L.push(`היי תום! ${f.get('name') ? `כאן ${f.get('name').trim()}. ` : ''}אשמח לקבוע שיחת ייעוץ לקעקוע.`);
@@ -202,6 +204,7 @@
       if (f.get('size')) L.push(`גודל: ${f.get('size')}`);
       if (f.get('when')) L.push(`נוח לי: ${f.get('when')}`);
       if (f.get('first')) L.push('זה הקעקוע הראשון שלי.');
+      if (PROMO) L.push(`🎁 זכיתי ב${PROMO}${PTEL ? ` (נייד ${PTEL})` : ''}`);
       return L.join('\n');
     };
     const upd = () => { pv.textContent = build(); };
@@ -487,6 +490,15 @@
     window.addEventListener('resize', () => { if (step === 3 && empty) sizeSig(); });
     minor(); go(1, true);
   }
+
+  /* ---------- Hanukkah dreidel: 4.12–12.12 only ---------- */
+  (() => {
+    const x = new Date(), t = x.getFullYear() * 1e4 + (x.getMonth() + 1) * 100 + x.getDate();
+    if (t >= 20261204 && t <= 20261212) {
+      const s = d.querySelector('script[src*="assets/js/site.js"]');
+      if (s) import(new URL('dreidel/dreidel.js', s.src).href).catch(() => {});
+    }
+  })();
 
   /* ---------- promo of the month (same source as the app) ---------- */
   const pbar = $('#promo-bar');
