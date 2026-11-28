@@ -1,3 +1,8 @@
+// הגנה מפני שליחות מזויפות (כמו באפליקציה): מספר מומצא נחסם, מלכודת רובוטים וזמן מילוי
+const TT_FAKE = (v) => { const d = String(v || '').replace(/\D/g, '').replace(/^972/, '0'); return /(\d)\1{5,}/.test(d) || /1234567|2345678|3456789|9876543|0123456/.test(d) || /^(\d)\1*$/.test(d.slice(3)); };
+const TT_T0 = Date.now();
+document.addEventListener('DOMContentLoaded', () => { try { ttGuard(); } catch (e) {} });
+const ttGuard = () => { let hp = document.getElementById('tt-hp'); if (!hp) { const w = document.createElement('div'); w.setAttribute('aria-hidden', 'true'); w.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden'; w.innerHTML = '<label for="tt-hp">אל תמלאו</label><input id="tt-hp" name="website" type="text" tabindex="-1" autocomplete="off">'; document.body.appendChild(w); hp = w.querySelector('input'); } return { hp: hp.value, ms: Date.now() - TT_T0 }; };
 /* Tomchu Tattoo – site behaviour. Vanilla, no dependencies. */
 (() => {
   const d = document, root = d.documentElement;
@@ -224,7 +229,7 @@
     const DEMO = !C.endpoint || !/(^|\.)tomchu-tattoo\.co\.il$/.test(location.hostname);
     const esc = (t) => String(t || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const nis = (n) => '₪' + Number(n || 0).toLocaleString('he-IL');
-    const okPhone = (p) => /^0?5\d{8}$|^9725\d{8}$/.test(String(p || '').replace(/\D/g, ''));
+    const okPhone = (p) => /^0?5\d{8}$|^9725\d{8}$/.test(String(p || '').replace(/\D/g, '')) && !TT_FAKE(p);
     const intl = (p) => { const x = String(p || '').replace(/\D/g, ''); return x.startsWith('972') ? x : '972' + x.replace(/^0/, ''); };
     const wa = (num, t) => `https://wa.me/${num}?text=${encodeURIComponent(t)}`;
     const link = (code) => `${C.app}#/gift/${code}`;
@@ -304,7 +309,7 @@
         let code;
         if (DEMO) { code = 'TT-' + Math.random().toString(36).slice(2, 8).toUpperCase(); V = { ok: true, code, status: 'pending', amount: a, design: g.design, to: g.to.trim(), from: g.from.trim(), msg: g.msg.trim() }; }
         else {
-          const r = await fetch(C.endpoint, { method: 'POST', body: JSON.stringify({ kind: 'gift', amount: a, design: g.design, from: g.from.trim(), phone: g.phone, to: g.to.trim(), toPhone: meta.toPhone, msg: g.msg.trim(), pay: g.pay, src: 'site' }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } }).then((x) => x.json());
+          const r = await fetch(C.endpoint, { method: 'POST', body: JSON.stringify({ ...ttGuard(), kind: 'gift', amount: a, design: g.design, from: g.from.trim(), phone: g.phone, to: g.to.trim(), toPhone: meta.toPhone, msg: g.msg.trim(), pay: g.pay, src: 'site' }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } }).then((x) => x.json());
           if (!r.ok) throw new Error(r.error); code = r.code;
         }
         try { localStorage.setItem('tt-gift-meta-' + code, JSON.stringify(meta)); } catch (e) {}
@@ -356,7 +361,7 @@
     const esc = (t) => String(t == null ? '' : t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const ageFrom = (iso) => { if (!iso) return null; const b = new Date(iso); if (isNaN(b)) return null; const t = new Date(); let a = t.getFullYear() - b.getFullYear(); if (t.getMonth() < b.getMonth() || (t.getMonth() === b.getMonth() && t.getDate() < b.getDate())) a--; return a; };
     const validId = (v) => { const id = String(v || '').replace(/\D/g, ''); if (id.length < 5 || id.length > 9) return false; const p = id.padStart(9, '0'); let s = 0; for (let i = 0; i < 9; i++) { const x = Number(p[i]) * ((i % 2) + 1); s += x > 9 ? x - 9 : x; } return s % 10 === 0; };
-    const validPhone = (v) => /^(?:0|\+?972-?)5\d-?\d{3}-?\d{4}$|^0\d{1,2}-?\d{7}$/.test(String(v || '').replace(/\s/g, ''));
+    const validPhone = (v) => /^(?:0|\+?972-?)5\d-?\d{3}-?\d{4}$|^0\d{1,2}-?\d{7}$/.test(String(v || '').replace(/\s/g, '')) && !TT_FAKE(v);
     const today = () => { const x = new Date(); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0, 10); };
     if (!val('tdate')) F('tdate').value = today();
     const DRAFT = 'tt-health-draft';
@@ -473,7 +478,7 @@
       let ok = true;
       if (!DEMO) {
         try {
-          const r = await fetch(H.endpoint, { method: 'POST', body: JSON.stringify({ kind: 'health', ...rec }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+          const r = await fetch(H.endpoint, { method: 'POST', body: JSON.stringify({ ...ttGuard(), kind: 'health', ...rec }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
           const j = await r.json().catch(() => ({ ok: true })); ok = r.ok && !(j && j.ok === false);
         } catch (e) { ok = false; }
       } else await new Promise((r) => setTimeout(r, 700));
